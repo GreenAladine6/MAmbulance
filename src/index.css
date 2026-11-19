@@ -1,9 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", sans-serif;
-  --font-heading: "Poppins", sans-serif;
+  --font-sans: system-ui, "Noto Sans Arabic", sans-serif;
+  --font-heading: system-ui, "Noto Sans Arabic", sans-serif;
 }
 
 @layer base {
@@ -16,7 +15,7 @@
     min-width: 320px;
     background: #ffffff;
     color: #263445;
-    font-family: "Inter", sans-serif;
+    font-family: system-ui, "Noto Sans Arabic", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -32,6 +31,11 @@
 
   button {
     cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 3px solid #2878b8;
+    outline-offset: 3px;
   }
 }
 

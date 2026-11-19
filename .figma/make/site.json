@@ -1,7 +1,8 @@
 {
-  "description": "A French-language website helps patients and families in Tunis find private ambulance and medical transport services, check service areas, and call the team directly.",
+  "title": "Ambulance privée à Tunis | Transport sanitaire au Bardo et au Menzah",
+  "description": "Contactez Ambulance Tunis pour organiser un transport sanitaire à Tunis, au Bardo et dans les secteurs d’El Menzah 1 à 9.",
   "robots": {
-    "index": false
+    "index": true
   },
   "accessibility": {
     "addBypassLinks": false,

@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
       react(),
       tailwindcss(),
       figmaSiteConfiguration(siteConfiguration),
+      multilingualSeoPages(),
       figmaErrorOverlayReplay(),
       figmaReactRefreshBoundaryFallback(),
       figmaMakeKitPlugin({ storiesGlob: "/src/**/*.stories.{ts,tsx,js,jsx}" }),
@@ -45,6 +46,103 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+
+function multilingualSeoPages(): Plugin {
+  const siteUrl = (process.env.VITE_SITE_URL || "").replace(/\/$/, "");
+  const pages = [
+    {
+      path: "fr",
+      lang: "fr-TN",
+      og: "fr_TN",
+      title: "Ambulance privée à Tunis | Transport sanitaire au Bardo et au Menzah",
+      description:
+        "Contactez Ambulance Tunis pour organiser un transport sanitaire à Tunis, au Bardo et dans les secteurs d’El Menzah 1 à 9.",
+      service: "Transport sanitaire privé à Tunis, au Bardo et à El Menzah",
+    },
+    {
+      path: "ar",
+      lang: "ar-TN",
+      og: "ar_TN",
+      title: "إسعاف خاص في تونس | نقل صحي بالباردو والمنزه",
+      description:
+        "اتصلوا بخدمة Ambulance Tunis لتنظيم النقل الصحي في تونس والباردو وأحياء المنزه من 1 إلى 9.",
+      service: "خدمات النقل الصحي في تونس والباردو والمنزه",
+    },
+    {
+      path: "en",
+      lang: "en-TN",
+      og: "en_TN",
+      title: "Private Ambulance in Tunis | Patient Transport in Le Bardo and El Menzah",
+      description:
+        "Contact Ambulance Tunis to arrange patient transport in Tunis, Le Bardo and El Menzah districts 1 to 9.",
+      service: "Private patient transport in Tunis, Le Bardo and El Menzah",
+    },
+  ];
+  const esc = (value: string) =>
+    value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  return {
+    name: "multilingual-seo-pages",
+    apply: "build",
+    closeBundle() {
+      const outputDir = path.resolve(__dirname, "dist");
+      const indexFile = path.join(outputDir, "index.html");
+      if (!fs.existsSync(indexFile)) return;
+      const original = fs.readFileSync(indexFile, "utf8");
+      const alternates =
+        pages
+          .map(
+            ({ path, lang }) =>
+              `<link rel="alternate" hreflang="${lang}" href="${siteUrl}/${path}/" />`,
+          )
+          .join("\n    ") +
+        `\n    <link rel="alternate" hreflang="x-default" href="${siteUrl}/fr/" />`;
+      const urls: string[] = [];
+      for (const page of pages) {
+        const canonical = `${siteUrl}/${page.path}/`;
+        const html = original
+          .replace(
+            /<html lang="[^"]+">/,
+            `<html lang="${page.lang}"${page.path === "ar" ? ' dir="rtl"' : ' dir="ltr"'}>`,
+          )
+          .replace(/<title>[^<]*<\/title>/, `<title>${esc(page.title)}</title>`)
+          .replace(
+            /(<meta name="description" content=")[^"]*("\s*\/?>)/,
+            `$1${esc(page.description)}$2`,
+          )
+          .replace(/(<meta property="og:locale" content=")[^"]*("\s*\/?>)/, `$1${page.og}$2`)
+          .replace(/(<meta property="og:title" content=")[^"]*("\s*\/?>)/, `$1${esc(page.title)}$2`)
+          .replace(
+            /(<meta property="og:description" content=")[^"]*("\s*\/?>)/,
+            `$1${esc(page.description)}$2`,
+          )
+          .replace(
+            "</head>",
+            `    <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Service", name: page.service, provider: { "@type": "Organization", name: "Ambulance Tunis" }, areaServed: ["Tunis", "Le Bardo", ...Array.from({ length: 9 }, (_, i) => `El Menzah ${i + 1}`)], inLanguage: page.lang })}</script>\n  </head>`,
+          )
+          .replace(
+            "</head>",
+            `    <link rel="canonical" href="${canonical}" />\n    ${alternates}\n  </head>`,
+          );
+        const pageDir = path.join(outputDir, page.path);
+        fs.mkdirSync(pageDir, { recursive: true });
+        fs.writeFileSync(path.join(pageDir, "index.html"), html);
+        urls.push(
+          `  <url><loc>${canonical}</loc><xhtml:link rel="alternate" hreflang="fr-TN" href="${siteUrl}/fr/"/><xhtml:link rel="alternate" hreflang="ar-TN" href="${siteUrl}/ar/"/><xhtml:link rel="alternate" hreflang="en-TN" href="${siteUrl}/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}/fr/"/></url>`,
+        );
+      }
+      fs.writeFileSync(
+        path.join(outputDir, "robots.txt"),
+        `User-agent: *\nAllow: /\n${siteUrl ? `Sitemap: ${siteUrl}/sitemap.xml\n` : ""}`,
+      );
+      if (siteUrl) {
+        fs.writeFileSync(
+          path.join(outputDir, "sitemap.xml"),
+          `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join("\n")}\n</urlset>`,
+        );
+      }
+    },
+  };
+}
 
 type FigmaSiteConfiguration = {
   title?: string;
