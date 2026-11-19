@@ -1,5 +1,65 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { coverageCopy, coverageGroups } from "./coverage";
 import { BUSINESS, localeContent, localeMeta, type Locale } from "./seo";
+
+const serviceIconPaths: ReactNode[] = [
+  <>
+    <path d="M3 7h11v11H3zM14 11h4l3 3v4h-7z" />
+    <circle cx="7.5" cy="18" r="2" />
+    <circle cx="17.5" cy="18" r="2" />
+    <path d="M8.5 10v5M6 12.5h5" />
+  </>,
+  <>
+    <path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16M2 21h20M9 21v-4h6v4" />
+    <path d="M12 7v6M9 10h6" />
+  </>,
+  <>
+    <circle cx="5" cy="18" r="2" />
+    <circle cx="19" cy="6" r="2" />
+    <path d="M7 18h4a3 3 0 0 0 3-3V9a3 3 0 0 1 3-3M9 6H5l2-2M15 18h4l-2 2" />
+  </>,
+  <>
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M16 3v4M8 3v4M3 10h18M9 15l2 2 4-4" />
+  </>,
+];
+
+function ServiceIcon({ index }: { index: number }) {
+  return (
+    <span className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-blue-50 text-[#2878B8] transition-colors group-hover:bg-[#2878B8] group-hover:text-white">
+      <svg
+        viewBox="0 0 24 24"
+        className="h-6 w-6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        {serviceIconPaths[index]}
+      </svg>
+    </span>
+  );
+}
+
+function MapPinIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
 
 function getLocale(): Locale {
   const route = window.location.pathname.split("/")[1];
@@ -11,10 +71,14 @@ export default function App() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const c = localeContent[locale];
+  const coverage = coverageCopy[locale];
   const meta = localeMeta[locale];
   const rtl = locale === "ar";
   const phone = BUSINESS.phone;
+  const phoneNumbers = BUSINESS.phoneNumbers;
   const href = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "#contact";
+  const phoneHref = (number: string) => `tel:${number.replace(/[^+\d]/g, "")}`;
+  const whatsappHref = (number: string) => `https://wa.me/${number.replace(/\D/g, "")}`;
 
   useEffect(() => {
     document.documentElement.lang = meta.lang;
@@ -46,8 +110,14 @@ export default function App() {
       </a>
       <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex min-h-[76px] max-w-[1240px] items-center justify-between gap-4 px-5 lg:px-8">
-          <a href="#home" className="font-heading text-lg font-bold text-[#12345A]">
-            {BUSINESS.name}
+          <a href="#home" className="flex shrink-0 items-center" aria-label={`${BUSINESS.name} — accueil`}>
+            <img
+              src="/maher-ambulance-logo.svg"
+              alt="MAHER Ambulance Tunis — Transport Sanitaire Privé"
+              width="1024"
+              height="288"
+              className="h-auto w-[190px] sm:w-[230px] lg:w-[250px]"
+            />
           </a>
           <nav className="hidden items-center gap-6 lg:flex" aria-label={c.navLabel}>
             {c.nav.map(([label, id]) => (
@@ -156,14 +226,32 @@ export default function App() {
               <h1 className="font-heading text-4xl font-bold leading-tight tracking-tight text-[#12345A] md:text-6xl">
                 {c.h1}
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">{c.intro}</p>
-              <a
-                href={href}
-                className="mt-8 inline-flex min-h-14 items-center justify-center rounded-xl bg-[#E63946] px-7 font-bold text-white"
-              >
-                {c.call}
-                {phone ? ` · ${phone}` : ""}
-              </a>
+              <div className="relative isolate mt-7 overflow-hidden rounded-[28px] shadow-xl">
+                <img
+                  src="https://images.unsplash.com/photo-1782835430483-283b2cfb4256?auto=format&fit=crop&w=1200&q=82"
+                  alt=""
+                  aria-hidden="true"
+                  width="1200"
+                  height="800"
+                  fetchPriority="high"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0A233D]/90 via-[#12345A]/75 to-[#12345A]/55" />
+                <div className="relative p-6 text-white md:p-7">
+                  <p className="text-base leading-7 text-white md:text-lg">{c.intro}</p>
+                  <div className="mt-5 grid gap-2">
+                    {phoneNumbers.map((number) => (
+                      <a
+                        key={number}
+                        href={phoneHref(number)}
+                        className="flex min-h-12 items-center justify-center rounded-xl bg-white/15 px-4 py-3 font-bold text-white ring-1 ring-white/25 backdrop-blur-sm hover:bg-white/25"
+                      >
+                        <bdi dir="ltr">{number}</bdi>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
               <p className="mt-5 text-sm text-slate-500">{c.areaSummary}</p>
             </div>
             <div className="overflow-hidden rounded-[28px] border-8 border-white shadow-xl">
@@ -186,11 +274,12 @@ export default function App() {
             </h2>
             <p className="mt-4 max-w-3xl leading-7 text-slate-600">{c.servicesIntro}</p>
             <div className="mt-9 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-              {c.services.map((service) => (
+              {c.services.map((service, index) => (
                 <article
                   key={service.title}
-                  className="service-card rounded-2xl border border-slate-200 p-6"
+                  className="service-card group rounded-2xl border border-slate-200 p-6"
                 >
+                  <ServiceIcon index={index} />
                   <h3 className="font-heading text-xl font-bold text-[#12345A]">{service.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-slate-600">{service.text}</p>
                 </article>
@@ -216,22 +305,95 @@ export default function App() {
         <section id="areas" className="section-space bg-[#F4F8FC]">
           <div className="mx-auto max-w-[1240px] px-5 md:px-8">
             <h2 className="font-heading text-3xl font-bold text-[#12345A] md:text-4xl">
-              {c.areasTitle}
+              {coverage.title}
             </h2>
-            <p className="mt-4 max-w-3xl leading-7 text-slate-600">{c.areasText}</p>
-            <h3 className="mt-8 font-heading text-xl font-bold text-[#12345A]">{c.bardo}</h3>
-            <h3 className="mt-6 font-heading text-xl font-bold text-[#12345A]">{c.menzah}</h3>
-            <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {Array.from({ length: 9 }, (_, i) => (
-                <li
-                  key={i}
-                  className="rounded-xl border border-slate-200 bg-white p-4 font-semibold text-[#12345A]"
-                >
-                  {c.menzahUnit} {i + 1}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 text-sm text-slate-500">{c.coverageNote}</p>
+            <p className="mt-4 max-w-4xl leading-7 text-slate-600">{coverage.intro}</p>
+            <div className="mt-8 grid items-start gap-4 md:grid-cols-2">
+              {coverageGroups
+                .filter((group) => group.enabled)
+                .map((group) => (
+                  <details
+                    key={group.id}
+                    className="group rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow open:shadow-md"
+                  >
+                    <summary
+                      className="coverage-summary flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl p-5 focus-visible:outline-offset-[-3px]"
+                      aria-controls={`coverage-${group.id}-places`}
+                    >
+                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue-50 text-[#2878B8]">
+                        <MapPinIcon />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span
+                          role="heading"
+                          aria-level={3}
+                          className="block font-heading text-lg font-bold text-[#12345A]"
+                        >
+                          {group.name[locale]}
+                        </span>
+                        <span className="mt-1 block text-xs leading-5 text-slate-500">
+                          {group.neighborhoods.length} {coverage.neighborhoodCount} ·{" "}
+                          {group.availability === "listed" ? coverage.listed : coverage.confirm}
+                        </span>
+                      </span>
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="coverage-chevron h-5 w-5 shrink-0 text-[#2878B8]"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </summary>
+                    <div
+                      id={`coverage-${group.id}-places`}
+                      className="border-t border-slate-100 px-5 pb-5 pt-4"
+                    >
+                      <h3 className="font-heading text-base font-bold text-[#12345A]">
+                        {group.heading[locale]}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">
+                        {group.description[locale]}
+                      </p>
+                      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                        {group.neighborhoods.map((place) => (
+                          <li
+                            key={place.name.fr}
+                            className="flex min-h-12 items-center justify-between gap-2 rounded-xl bg-[#F4F8FC] px-3 py-2"
+                          >
+                            <span className="text-sm font-medium text-[#12345A]">
+                              {place.name[locale]}
+                            </span>
+                            <span
+                              className="shrink-0 text-end text-[10px] leading-4 text-slate-500"
+                              title={
+                                place.classification === "ins-sector"
+                                  ? coverage.geographicStatus
+                                  : place.classification === "common-name"
+                                    ? coverage.commonStatus
+                                    : coverage.candidateStatus
+                              }
+                            >
+                              {place.classification === "ins-sector"
+                                ? "INS"
+                                : place.classification === "common-name"
+                                  ? coverage.commonStatus
+                                  : coverage.candidateStatus}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="mt-4 text-xs leading-5 text-slate-500">
+                        {coverage.classificationNote}
+                      </p>
+                    </div>
+                  </details>
+                ))}
+            </div>
           </div>
         </section>
 
@@ -276,18 +438,43 @@ export default function App() {
         </section>
       </main>
       <footer className="bg-[#0A233D] px-5 py-8 text-center text-sm text-blue-100">
+        <img
+          src="/maher-ambulance-logo.svg"
+          alt="MAHER Ambulance Tunis — Transport Sanitaire Privé"
+          width="1024"
+          height="288"
+          loading="lazy"
+          className="mx-auto mb-5 h-auto w-[min(100%,360px)] rounded-xl"
+        />
         <p>
           {BUSINESS.name} · {c.areaSummary}
         </p>
       </footer>
-      <a
-        href={href}
-        aria-label={phone ? `${c.call}: ${phone}` : c.call}
-        className="fixed inset-x-3 bottom-3 z-50 flex min-h-14 items-center justify-center gap-2 rounded-xl bg-[#E63946] px-4 font-bold text-white shadow-xl sm:inset-x-auto sm:bottom-6 sm:end-6 sm:min-h-14 sm:px-7"
-      >
-        {c.call}
-        {phone && <bdi dir="ltr">{phone}</bdi>}
-      </a>
+      <div className="fixed inset-x-3 bottom-3 z-50 grid gap-2 rounded-2xl bg-white p-2 shadow-xl sm:inset-x-auto sm:bottom-6 sm:end-6 sm:min-w-72">
+        {phoneNumbers.map((number) => (
+          <div key={number} className="grid gap-2">
+            <a
+              href={whatsappHref(number)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`WhatsApp: ${number}`}
+              className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-3 text-sm font-bold text-white hover:bg-[#1fbd5b]"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+                <path d="M12.04 2a9.87 9.87 0 0 0-8.42 15.02L2.3 21.7l4.8-1.26A9.87 9.87 0 1 0 12.04 2Zm0 17.93a8.03 8.03 0 0 1-4.1-1.12l-.3-.18-2.85.75.76-2.78-.2-.31a8.06 8.06 0 1 1 6.69 3.64Zm4.42-6.04c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.95-1.2-.72-.64-1.21-1.43-1.35-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.3.98 2.46c.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.58.18 1.1.16 1.51.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z" />
+              </svg>
+              WhatsApp <bdi dir="ltr">{number}</bdi>
+            </a>
+            <a
+              href={phoneHref(number)}
+              aria-label={`${c.call}: ${number}`}
+              className="flex min-h-12 items-center justify-center rounded-xl bg-[#E63946] px-3 text-sm font-bold text-white hover:bg-[#ca2e3b]"
+            >
+              {c.call} <bdi className="ms-1" dir="ltr">{number}</bdi>
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

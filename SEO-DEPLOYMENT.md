@@ -14,7 +14,7 @@
 - French, Arabic, and English content is available at `/fr/`, `/ar/`, and `/en/`; each has a distinct title, description, Open Graph locale, canonical link, hreflang set, and Service JSON-LD.
 - Arabic uses RTL and Arabic-language copy. Language links retain the current section fragment.
 - Service-area copy names Tunis, Le Bardo, and El Menzah 1–9, with availability confirmation language. Unverified Grand Tunis neighborhoods have been removed.
-- The owner supplied `99999999`; the site formats it as `+21699999999` in [`src/business.ts`](src/business.ts). `VITE_PHONE_NUMBER` overrides that default. The number appears in visible page text, call links, and the provider telephone field in JSON-LD.
+- The owner supplied two numbers; both are centralized in [`src/business.ts`](src/business.ts). `VITE_PHONE_NUMBER` overrides the primary line. Both numbers appear as visible, clickable phone links; the primary number is in the provider telephone field and the second is in its contact point in JSON-LD.
 - `VITE_SITE_URL` controls absolute canonical/hreflang URLs and sitemap generation. Without a configured domain, links are site-root-relative and the build omits `sitemap.xml` rather than publishing invalid or guessed URLs.
 - `robots.txt` allows crawling. Figma's indexing setting is enabled.
 - The hero image has explicit dimensions and high fetch priority. Remote font loading was removed to reduce third-party requests. Focus indicators and a translated skip link were added.

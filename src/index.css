@@ -40,6 +40,22 @@
 }
 
 @layer components {
+  .coverage-summary {
+    list-style: none;
+  }
+
+  .coverage-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .coverage-chevron {
+    transition: transform 180ms ease;
+  }
+
+  details[open] .coverage-chevron {
+    transform: rotate(180deg);
+  }
+
   .section-space {
     padding-block: 7rem;
   }

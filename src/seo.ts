@@ -1,10 +1,14 @@
-import { DEFAULT_PHONE_NUMBER } from "./business";
+import { DEFAULT_PHONE_NUMBERS } from "./business";
 
 export type Locale = "fr" | "ar" | "en";
 
 export const BUSINESS = {
   name: "Ambulance Tunis",
-  phone: import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBER,
+  phoneNumbers: [
+    import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBERS[0],
+    DEFAULT_PHONE_NUMBERS[1],
+  ],
+  phone: import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBERS[0],
   siteUrl: import.meta.env.VITE_SITE_URL?.replace(/\/$/, "") ?? "",
 };
 

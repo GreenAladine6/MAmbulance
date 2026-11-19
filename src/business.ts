@@ -1,2 +1,2 @@
-// Confirmed by the site owner; override at build time with VITE_PHONE_NUMBER if needed.
-export const DEFAULT_PHONE_NUMBER = "+21699999999";
+// Confirmed by the site owner. VITE_PHONE_NUMBER can override the primary line.
+export const DEFAULT_PHONE_NUMBERS = ["+21699999999", "+21620112690"] as const;
