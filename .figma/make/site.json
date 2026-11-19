@@ -1,0 +1,10 @@
+{
+  "description": "A French-language website helps patients and families in Tunis find private ambulance and medical transport services, check service areas, and call the team directly.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

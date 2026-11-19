@@ -1,0 +1,136 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Poppins", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 76px;
+  }
+
+  body {
+    min-width: 320px;
+    background: #ffffff;
+    color: #263445;
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: #2878b8;
+    color: white;
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .section-space {
+    padding-block: 7rem;
+  }
+
+  .call-button {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    border-radius: 0.75rem;
+    background: #e63946;
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.015em;
+    box-shadow: 0 10px 25px rgba(230, 57, 70, 0.22);
+    transition:
+      transform 180ms ease,
+      background-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .call-button:hover {
+    transform: translateY(-2px);
+    background: #cf2d3a;
+    box-shadow: 0 14px 30px rgba(230, 57, 70, 0.3);
+  }
+
+  .service-card {
+    box-shadow: 0 12px 40px rgba(18, 52, 90, 0.05);
+    transition:
+      transform 200ms ease,
+      box-shadow 200ms ease,
+      border-color 200ms ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-6px);
+    border-color: #bfdcf2;
+    box-shadow: 0 22px 45px rgba(18, 52, 90, 0.11);
+  }
+}
+
+.bg-medical-pattern {
+  background-image: radial-gradient(#2878b8 0.8px, transparent 0.8px);
+  background-size: 24px 24px;
+}
+
+.map-lines {
+  background-image:
+    linear-gradient(
+      30deg,
+      transparent 48%,
+      rgba(255, 255, 255, 0.17) 49%,
+      rgba(255, 255, 255, 0.17) 51%,
+      transparent 52%
+    ),
+    linear-gradient(
+      120deg,
+      transparent 48%,
+      rgba(255, 255, 255, 0.12) 49%,
+      rgba(255, 255, 255, 0.12) 51%,
+      transparent 52%
+    );
+  background-size: 80px 80px;
+}
+
+.cta-rings {
+  background-image: radial-gradient(
+    circle at center,
+    transparent 0,
+    transparent 100px,
+    rgba(255, 255, 255, 0.08) 101px,
+    transparent 103px,
+    transparent 180px,
+    rgba(255, 255, 255, 0.06) 181px,
+    transparent 183px
+  );
+}
+
+@media (max-width: 767px) {
+  .section-space {
+    padding-block: 5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
