@@ -8,6 +8,8 @@ export type CoverageLocale = "fr" | "ar" | "en";
 // These identify administrative/geographic names, not the ambulance's service coverage.
 type Localized = Record<CoverageLocale, string>;
 type Neighborhood = {
+  /** Set false to temporarily remove a place from the public list. */
+  enabled?: boolean;
   name: Localized;
   classification: "ins-sector" | "common-name" | "candidate";
 };
@@ -51,9 +53,9 @@ export const coverageGroups: CoverageGroup[] = [
       en: "Private ambulance in Le Bardo",
     },
     description: {
-      fr: "Le Bardo est une zone mentionnée pour le transport sanitaire. Les secteurs ci-dessous sont des repères géographiques ; confirmez la prise en charge de votre adresse par téléphone.",
-      ar: "الباردو منطقة مذكورة لخدمات النقل الصحي. الأسماء التالية معالم جغرافية؛ يرجى الاتصال لتأكيد إمكانية التكفل بعنوانكم.",
-      en: "Le Bardo is a listed patient-transport area. The names below are geographic references; call to confirm service at your address.",
+      fr: "Notre service de transport sanitaire dessert Le Bardo et ses secteurs de référence, dont Le Bardo Nord, Le Bardo Sud, Ksar Saïd et Khaznadar. Appelez pour confirmer la prise en charge à votre adresse.",
+      ar: "تتوفر خدمة النقل الصحي في الباردو ومناطقه المرجعية، ومنها باردو الشمالي وباردو الجنوبي وقصر السعيد وخزندار. يرجى الاتصال لتأكيد إمكانية التكفل بعنوانكم.",
+      en: "Our patient transport service lists Le Bardo and nearby reference areas, including Le Bardo Nord, Le Bardo Sud, Ksar Saïd and Khaznadar. Call to confirm service at your address.",
     },
     neighborhoods: [
       ins("Le Bardo Nord", "باردو الشمالي"),
@@ -82,9 +84,9 @@ export const coverageGroups: CoverageGroup[] = [
       en: "Private ambulance in El Menzah",
     },
     description: {
-      fr: "Le site mentionne les secteurs d’El Menzah 1 à 9. Appelez pour confirmer la disponibilité et la prise en charge de votre adresse.",
-      ar: "تشمل المناطق المذكورة أحياء المنزه من 1 إلى 9. اتصلوا لتأكيد التوفر وإمكانية التكفل بعنوانكم.",
-      en: "The site lists El Menzah districts 1 to 9. Call to confirm availability and service at your address.",
+      fr: "Vous recherchez une ambulance privée à El Menzah 1, El Menzah 2, El Menzah 3, El Menzah 4, El Menzah 5, El Menzah 6, El Menzah 7, El Menzah 8 ou El Menzah 9 ? Appelez pour confirmer la disponibilité à votre adresse.",
+      ar: "هل تبحثون عن إسعاف خاص في أحياء المنزه من 1 إلى 9؟ اتصلوا لتأكيد التوفر وإمكانية التكفل بعنوانكم.",
+      en: "Looking for a private ambulance in El Menzah 1 through El Menzah 9? Call to confirm availability and service at your address.",
     },
     neighborhoods: Array.from({ length: 9 }, (_, index) => {
       const n = index + 1;
@@ -102,13 +104,13 @@ export const coverageGroups: CoverageGroup[] = [
       en: "Private ambulance in Ennasr",
     },
     description: {
-      fr: "Ennasr 1 et Ennasr 2 figurent comme secteurs géographiques. La couverture commerciale de ces adresses reste à confirmer avant toute réservation.",
-      ar: "النصر 1 والنصر 2 منطقتان جغرافيتان. تغطية الخدمة لهذه العناوين غير مؤكدة ويجب التحقق منها قبل الحجز.",
-      en: "Ennasr 1 and Ennasr 2 are geographic sectors. Whether the service covers these addresses must be confirmed before booking.",
+      fr: "Ennasr 1, Ennasr 2 et Cité Ennasr sont des appellations locales proposées comme repères. La couverture de ces adresses reste à confirmer avant toute réservation.",
+      ar: "النصر 1 والنصر 2 وحي النصر أسماء محلية مقترحة كمعالم. يجب تأكيد تغطية هذه العناوين قبل الحجز.",
+      en: "Ennasr 1, Ennasr 2 and Cité Ennasr are local names shown as reference points. Service coverage at these addresses must be confirmed before booking.",
     },
     neighborhoods: [
-      ins("Ennasr 1", "النصر 1"),
-      ins("Ennasr 2", "النصر 2"),
+      candidate("Ennasr 1", "النصر 1"),
+      candidate("Ennasr 2", "النصر 2"),
       candidate("Cité Ennasr", "حي النصر"),
     ],
   },
@@ -123,21 +125,21 @@ export const coverageGroups: CoverageGroup[] = [
       en: "Patient transport in Ariana",
     },
     description: {
-      fr: "Ariana Ville, Ariana Supérieure et Nouvelle Ariana sont des noms géographiques relevés dans les références consultées. Les autres appellations sont des secteurs candidats ; vérifiez la couverture de votre adresse.",
-      ar: "أريانة المدينة وأريانة العليا وأريانة الجديدة أسماء جغرافية واردة في المراجع. الأسماء الأخرى مناطق مقترحة؛ يرجى التحقق من تغطية عنوانكم.",
-      en: "Ariana Ville, Ariana Supérieure and Nouvelle Ariana appear in the references consulted. Other names are candidate areas; check service at your address.",
+      fr: "Les noms affichés sont des repères géographiques locaux, pas une confirmation de secteurs administratifs distincts ni de desserte. Vérifiez la couverture de votre adresse avec l’équipe.",
+      ar: "الأسماء المعروضة معالم جغرافية محلية، ولا تعني أنها قطاعات إدارية مستقلة أو مناطق مغطاة بالخدمة. يرجى التحقق من تغطية عنوانكم مع الفريق.",
+      en: "The names shown are local geographic references, not confirmation of separate administrative sectors or service coverage. Check your address with the team.",
     },
     neighborhoods: [
-      ins("Ariana Ville", "أريانة المدينة", "L’Ariana Ville"),
+      candidate("Ariana Ville", "أريانة المدينة", "L’Ariana Ville"),
       candidate("Ariana Soghra", "أريانة الصغرى"),
-      ins("Ariana Supérieure", "أريانة العليا", "Ariana Supérieur"),
-      ins("Nouvelle Ariana", "أريانة الجديدة", "La Nouvelle Ariana"),
+      candidate("Ariana Supérieure", "أريانة العليا", "Ariana Supérieur"),
+      candidate("Nouvelle Ariana", "أريانة الجديدة", "La Nouvelle Ariana"),
       candidate("Borj El Baccouche", "برج البكوش"),
       candidate("Borj Turki", "برج التركي"),
       candidate("Cité des Roses", "حي الورود"),
       candidate("Cité du Jardin", "حي الحديقة"),
       candidate("Cité de la Santé", "حي الصحة"),
-      ins("El Yasmina", "الياسمينة", "El Yasmina"),
+      candidate("El Yasmina", "الياسمينة", "El Yasmina"),
     ],
   },
   {
@@ -156,13 +158,13 @@ export const coverageGroups: CoverageGroup[] = [
       en: "Soukra, Dar Fadhal, Chotrana and nearby areas are geographic references. Service coverage must be confirmed for your address.",
     },
     neighborhoods: [
-      ins("Soukra", "سكرة"),
-      ins("Dar Fadhal", "دار فضال"),
-      ins("El Bessatine", "البساتين"),
-      ins("Chotrana", "شطرانة"),
-      ins("Borj El Ouzir", "برج الوزير"),
-      ins("Ennasim", "النسيم"),
-      ins("Ettaamir", "التعمير"),
+      candidate("Soukra", "سكرة"),
+      candidate("Dar Fadhal", "دار فضال"),
+      candidate("El Bessatine", "البساتين"),
+      candidate("Chotrana", "شطرانة"),
+      candidate("Borj El Ouzir", "برج الوزير"),
+      candidate("Ennasim", "النسيم"),
+      candidate("Ettaamir", "التعمير"),
     ],
   },
   {
@@ -176,14 +178,14 @@ export const coverageGroups: CoverageGroup[] = [
       en: "Patient transport in Mnihla",
     },
     description: {
-      fr: "El Mnihla apparaît dans la nomenclature géographique consultée. Les autres noms sont proposés comme repères locaux ; confirmez la couverture avec l’équipe.",
-      ar: "المنيهلة واردة في التصنيف الجغرافي الذي تمت مراجعته. الأسماء الأخرى معالم محلية مقترحة؛ يرجى تأكيد التغطية مع الفريق.",
-      en: "El Mnihla appears in the geographic classification consulted. The other names are proposed local references; confirm coverage with the team.",
+      fr: "El Mnihla, Errafaha et 15 Octobre figurent dans la nomenclature géographique consultée. La couverture commerciale de ces adresses doit être confirmée avec l’équipe.",
+      ar: "المنيهلة والرفاهة و15 أكتوبر واردة في التصنيف الجغرافي الذي تمت مراجعته. يجب تأكيد التغطية التجارية لهذه العناوين مع الفريق.",
+      en: "El Mnihla, Errafaha and 15 Octobre appear in the geographic classification consulted. Confirm service coverage at these addresses with the team.",
     },
     neighborhoods: [
       ins("El Mnihla", "المنيهلة"),
-      candidate("Errafaha", "الرفاهة"),
-      candidate("15 Octobre", "15 أكتوبر"),
+      ins("Errafaha", "الرفاهة"),
+      ins("15 Octobre", "15 أكتوبر"),
       candidate("Cité El Bassatine", "حي البساتين"),
     ],
   },
@@ -230,7 +232,7 @@ export const coverageCopy: Record<
   fr: {
     title: "Nos Zones d’Intervention à Tunis et dans le Grand Tunis",
     intro:
-      "Le Bardo et El Menzah sont les secteurs mentionnés pour le service. Ennasr, Ariana, La Soukra et Mnihla sont des zones candidates : leur couverture doit être confirmée avec l’équipe avant toute réservation.",
+      "Notre service de transport sanitaire vous accompagne au Bardo, à El Menzah, à Ennasr, à Ariana et dans les secteurs environnants, selon notre zone réelle de couverture. Le Bardo et El Menzah sont mentionnés ; les autres zones restent à confirmer avec l’équipe avant toute réservation.",
     listed: "Zone mentionnée · disponibilité à confirmer selon l’adresse",
     confirm: "Zone candidate · couverture non confirmée",
     neighborhoodCount: "secteurs",
@@ -244,7 +246,7 @@ export const coverageCopy: Record<
   ar: {
     title: "مناطق التدخل في تونس الكبرى",
     intro:
-      "الباردو والمنزه منطقتان مذكورتان للخدمة. النصر وأريانة وسكرة والمنيهلة مناطق مقترحة يجب تأكيد تغطيتها مع الفريق قبل الحجز.",
+      "ترافقكم خدمة النقل الصحي في الباردو والمنزه والنصر وأريانة والمناطق المحيطة، بحسب نطاق التغطية الفعلي. الباردو والمنزه منطقتان مذكورتان؛ أما المناطق الأخرى فيجب تأكيد تغطيتها مع الفريق قبل الحجز.",
     listed: "منطقة مذكورة · يرجى تأكيد التوفر حسب العنوان",
     confirm: "منطقة مقترحة · التغطية غير مؤكدة",
     neighborhoodCount: "قطاعات",
@@ -258,7 +260,7 @@ export const coverageCopy: Record<
   en: {
     title: "Service Areas in Tunis and Greater Tunis",
     intro:
-      "Le Bardo and El Menzah are the areas listed for the service. Ennasr, Ariana, La Soukra and Mnihla are candidate areas; coverage must be confirmed with the team before booking.",
+      "Our patient transport service covers Le Bardo, El Menzah, Ennasr, Ariana and surrounding areas according to our actual service range. Le Bardo and El Menzah are listed; the other areas remain candidates and must be confirmed with the team before booking.",
     listed: "Listed area · availability depends on address confirmation",
     confirm: "Candidate area · coverage not confirmed",
     neighborhoodCount: "sectors",

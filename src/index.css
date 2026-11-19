@@ -56,6 +56,24 @@
     transform: rotate(180deg);
   }
 
+  @supports (interpolate-size: allow-keywords) {
+    details {
+      interpolate-size: allow-keywords;
+    }
+
+    details::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 180ms ease,
+        content-visibility 180ms allow-discrete;
+    }
+
+    details[open]::details-content {
+      block-size: auto;
+    }
+  }
+
   .section-space {
     padding-block: 7rem;
   }
