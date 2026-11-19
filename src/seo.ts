@@ -1,8 +1,10 @@
+import { DEFAULT_PHONE_NUMBER } from "./business";
+
 export type Locale = "fr" | "ar" | "en";
 
 export const BUSINESS = {
   name: "Ambulance Tunis",
-  phone: import.meta.env.VITE_PHONE_NUMBER ?? "",
+  phone: import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBER,
   siteUrl: import.meta.env.VITE_SITE_URL?.replace(/\/$/, "") ?? "",
 };
 
@@ -31,6 +33,8 @@ type LocaleStrings = {
   navLabel: string;
   languageLabel: string;
   call: string;
+  openMenu: string;
+  closeMenu: string;
   skip: string;
   nav: [string, string][];
   kicker: string;
@@ -60,7 +64,9 @@ export const localeContent = {
   fr: {
     navLabel: "Navigation principale",
     languageLabel: "Choisir la langue",
-    call: "Appeler",
+    call: "Appeler maintenant",
+    openMenu: "Ouvrir le menu",
+    closeMenu: "Fermer le menu",
     skip: "Aller au contenu",
     nav: [
       ["Accueil", "home"],
@@ -137,7 +143,9 @@ export const localeContent = {
   ar: {
     navLabel: "التنقل الرئيسي",
     languageLabel: "اختيار اللغة",
-    call: "اتصل بنا",
+    call: "اتصل الآن",
+    openMenu: "فتح القائمة",
+    closeMenu: "إغلاق القائمة",
     skip: "الانتقال إلى المحتوى",
     nav: [
       ["الرئيسية", "home"],
@@ -203,7 +211,9 @@ export const localeContent = {
   en: {
     navLabel: "Main navigation",
     languageLabel: "Choose language",
-    call: "Call us",
+    call: "Call now",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
     skip: "Skip to content",
     nav: [
       ["Home", "home"],

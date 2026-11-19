@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import fs from "node:fs";
 import path from "node:path";
+import { DEFAULT_PHONE_NUMBER } from "./src/business";
 
 import siteConfiguration from "./.figma/make/site.json";
 
@@ -49,6 +50,7 @@ export default defineConfig(({ mode }) => {
 
 function multilingualSeoPages(): Plugin {
   const siteUrl = (process.env.VITE_SITE_URL || "").replace(/\/$/, "");
+  const phoneNumber = process.env.VITE_PHONE_NUMBER?.trim() || DEFAULT_PHONE_NUMBER;
   const pages = [
     {
       path: "fr",
@@ -117,7 +119,7 @@ function multilingualSeoPages(): Plugin {
           )
           .replace(
             "</head>",
-            `    <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Service", name: page.service, provider: { "@type": "Organization", name: "Ambulance Tunis" }, areaServed: ["Tunis", "Le Bardo", ...Array.from({ length: 9 }, (_, i) => `El Menzah ${i + 1}`)], inLanguage: page.lang })}</script>\n  </head>`,
+            `    <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Service", name: page.service, provider: { "@type": "Organization", name: "Ambulance Tunis", ...(phoneNumber ? { telephone: phoneNumber } : {}) }, areaServed: ["Tunis", "Le Bardo", ...Array.from({ length: 9 }, (_, i) => `El Menzah ${i + 1}`)], inLanguage: page.lang })}</script>\n  </head>`,
           )
           .replace(
             "</head>",

@@ -9,6 +9,7 @@ function getLocale(): Locale {
 export default function App() {
   const [locale] = useState<Locale>(getLocale);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [menuOpen, setMenuOpen] = useState(false);
   const c = localeContent[locale];
   const meta = localeMeta[locale];
   const rtl = locale === "ar";
@@ -59,7 +60,7 @@ export default function App() {
               </a>
             ))}
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-3 lg:flex">
             <nav aria-label={c.languageLabel} className="flex gap-2 text-sm font-semibold">
               {(["fr", "ar", "en"] as Locale[]).map((code) => (
                 <a
@@ -76,11 +77,72 @@ export default function App() {
             </nav>
             <a
               href={href}
-              className="hidden rounded-xl bg-[#E63946] px-4 py-3 text-xs font-bold text-white sm:inline-flex"
+              className="rounded-xl bg-[#E63946] px-4 py-3 text-xs font-bold text-white"
             >
               {c.call}
+              {phone ? ` · ${phone}` : ""}
             </a>
           </div>
+          <button
+            type="button"
+            className="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-[#12345A] focus-visible:outline-offset-2 lg:hidden"
+            aria-label={menuOpen ? c.closeMenu : c.openMenu}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              {menuOpen ? <path d="m6 6 12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
+          </button>
+        </div>
+        <div
+          id="mobile-menu"
+          className={`${menuOpen ? "block" : "hidden"} border-t border-slate-100 bg-white px-5 pb-5 pt-3 shadow-lg lg:hidden`}
+        >
+          <nav aria-label={c.navLabel} className="grid">
+            {c.nav.map(([label, id]) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                onClick={() => setMenuOpen(false)}
+                className="border-b border-slate-100 py-3 font-semibold text-[#12345A]"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+          <nav aria-label={c.languageLabel} className="mt-4 flex gap-2">
+            {(["fr", "ar", "en"] as Locale[]).map((code) => (
+              <a
+                key={code}
+                href={`/${code}/${window.location.hash}`}
+                lang={localeMeta[code].lang}
+                hrefLang={localeMeta[code].lang}
+                aria-current={locale === code ? "page" : undefined}
+                onClick={() => setMenuOpen(false)}
+                className={`min-h-11 flex-1 rounded-lg border px-3 py-2 text-center text-sm font-bold ${locale === code ? "border-[#2878B8] bg-blue-50 text-[#2878B8]" : "border-slate-200 text-slate-600"}`}
+              >
+                {code.toUpperCase()}
+              </a>
+            ))}
+          </nav>
+          <a
+            href={href}
+            onClick={() => setMenuOpen(false)}
+            className="mt-4 flex min-h-12 items-center justify-center rounded-xl bg-[#E63946] px-4 text-sm font-bold text-white"
+          >
+            {c.call}
+            {phone ? ` · ${phone}` : ""}
+          </a>
         </div>
       </header>
 
@@ -220,9 +282,11 @@ export default function App() {
       </footer>
       <a
         href={href}
-        className="fixed inset-x-3 bottom-3 z-50 flex min-h-14 items-center justify-center rounded-xl bg-[#E63946] font-bold text-white shadow-xl sm:hidden"
+        aria-label={phone ? `${c.call}: ${phone}` : c.call}
+        className="fixed inset-x-3 bottom-3 z-50 flex min-h-14 items-center justify-center gap-2 rounded-xl bg-[#E63946] px-4 font-bold text-white shadow-xl sm:inset-x-auto sm:bottom-6 sm:end-6 sm:min-h-14 sm:px-7"
       >
         {c.call}
+        {phone && <bdi dir="ltr">{phone}</bdi>}
       </a>
     </div>
   );
