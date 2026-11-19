@@ -485,6 +485,23 @@ export default function App() {
               </div>
             ))}
           </div>
+          <div className="mx-auto mt-6 max-w-3xl rounded-2xl border border-white/15 bg-white/5 p-4">
+            <p className="text-sm leading-6 text-blue-100">{c.emergencyNote}</p>
+            <div className="mt-3 flex flex-wrap justify-center gap-2">
+              <a
+                href="tel:190"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/20 px-4 text-sm font-bold text-white hover:bg-white/10"
+              >
+                {c.samuLabel} <bdi dir="ltr">190</bdi>
+              </a>
+              <a
+                href="tel:198"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/20 px-4 text-sm font-bold text-white hover:bg-white/10"
+              >
+                {c.civilProtectionLabel} <bdi dir="ltr">198</bdi>
+              </a>
+            </div>
+          </div>
         </section>
       </main>
       <footer className="bg-[#0A233D] px-5 py-8 text-center text-sm text-blue-100">
@@ -500,26 +517,30 @@ export default function App() {
           {BUSINESS.name} · {c.areaSummary}
         </p>
       </footer>
-      <div className="fixed bottom-3 end-3 z-50 flex items-center gap-2 rounded-full bg-white/95 p-1.5 shadow-lg backdrop-blur-sm sm:bottom-6 sm:end-6">
-        <a
-          href={whatsappHref(phoneNumbers[0])}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`WhatsApp: ${phoneNumbers[0]}`}
-          title={`WhatsApp: ${phoneNumbers[0]}`}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#25D366] text-white hover:bg-[#1fbd5b]"
-        >
-          <WhatsAppIcon />
-        </a>
-        <a
-          href={phoneHref(phoneNumbers[0])}
-          aria-label={`${c.call}: ${phoneNumbers[0]}`}
-          className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#E63946] px-3 text-xs font-bold text-white hover:bg-[#ca2e3b] sm:px-4 sm:text-sm"
-        >
-          <PhoneIcon className="h-4 w-4 shrink-0" />
-          <span>{c.call}</span>
-          <bdi dir="ltr">{phoneNumbers[0]}</bdi>
-        </a>
+      <div className="fixed bottom-3 end-3 z-50 grid gap-1.5 rounded-2xl bg-white/95 p-1.5 shadow-lg backdrop-blur-sm sm:bottom-6 sm:end-6">
+        {phoneNumbers.map((number) => (
+          <div key={number} className="flex items-center gap-2">
+            <a
+              href={whatsappHref(number)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`WhatsApp: ${number}`}
+              title={`WhatsApp: ${number}`}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#25D366] text-white hover:bg-[#1fbd5b]"
+            >
+              <WhatsAppIcon />
+            </a>
+            <a
+              href={phoneHref(number)}
+              aria-label={`${c.call}: ${number}`}
+              className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#E63946] px-3 text-xs font-bold text-white hover:bg-[#ca2e3b] sm:px-4 sm:text-sm"
+            >
+              <PhoneIcon className="h-4 w-4 shrink-0" />
+              <span>{c.call}</span>
+              <bdi dir="ltr">{number}</bdi>
+            </a>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -59,9 +59,9 @@ function multilingualSeoPages(): Plugin {
       path: "fr",
       lang: "fr-TN",
       og: "fr_TN",
-      title: "Ambulance privée à Tunis | Transport sanitaire au Bardo et au Menzah",
+      title: "Ambulance en urgence à Tunis | Transport sanitaire privé",
       description:
-        "Contactez Ambulance Tunis pour organiser un transport sanitaire à Tunis, au Bardo et dans les secteurs d’El Menzah 1 à 9.",
+        "Besoin d’une ambulance en urgence à Tunis ? Appelez pour vérifier la disponibilité et le délai estimé. Urgence vitale : SAMU 190 ou Protection civile 198.",
       service: "Transport sanitaire privé à Tunis, au Bardo et à El Menzah",
     },
     {

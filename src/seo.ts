@@ -15,9 +15,9 @@ export const BUSINESS = {
 export const localeMeta: Record<Locale, { lang: string; title: string; description: string }> = {
   fr: {
     lang: "fr-TN",
-    title: "Ambulance privée à Tunis | Transport sanitaire au Bardo et au Menzah",
+    title: "Ambulance en urgence à Tunis | Transport sanitaire privé",
     description:
-      "Contactez Ambulance Tunis pour organiser un transport sanitaire à Tunis, au Bardo et dans les secteurs d’El Menzah 1 à 9.",
+      "Besoin d’une ambulance en urgence à Tunis ? Appelez pour vérifier la disponibilité et le délai estimé. Urgence vitale : SAMU 190 ou Protection civile 198.",
   },
   ar: {
     lang: "ar-TN",
@@ -62,6 +62,9 @@ type LocaleStrings = {
   faqs: [string, string][];
   contactTitle: string;
   contactText: string;
+  emergencyNote: string;
+  samuLabel: string;
+  civilProtectionLabel: string;
 };
 
 export const localeContent = {
@@ -82,16 +85,16 @@ export const localeContent = {
     kicker: "Transport sanitaire privé · Tunis",
     h1: "Ambulance privée à Tunis – Transport sanitaire au Bardo et aux Menzah",
     intro:
-      "Vous recherchez une ambulance privée à Tunis ? Contactez notre équipe pour organiser un transport sanitaire, un déplacement entre domicile et établissement de santé ou un rendez-vous médical. La prise en charge est à confirmer selon votre demande et la disponibilité.",
+      "Besoin d’une ambulance en urgence à Tunis ? Vous cherchez un service d’ambulance rapide au Bardo ou à El Menzah ? Appelez notre équipe pour vérifier la disponibilité et le délai estimé selon votre demande. Pour une urgence vitale, contactez directement le SAMU (190) ou la Protection civile (198).",
     heroAlt: "Ambulance utilisée pour le transport sanitaire",
     areaSummary: "Tunis · Le Bardo · El Menzah 1 à 9",
-    servicesTitle: "Services de transport sanitaire à Tunis",
+    servicesTitle: "Ambulance et transport sanitaire urgent à Tunis",
     servicesIntro:
-      "Des déplacements médicaux organisés selon les besoins du patient. Appelez pour discuter des conditions de transport.",
+      "Pour une demande urgente de transport sanitaire à Tunis, contactez-nous afin de vérifier si une ambulance privée est disponible et sous quel délai. Les transports programmés sont également organisés selon les besoins du patient.",
     services: [
       {
-        title: "Transport sanitaire",
-        text: "Transport de patients dans le cadre d’un déplacement médical planifié, selon les besoins communiqués.",
+        title: "Transport sanitaire urgent ou programmé",
+        text: "Pour une ambulance en urgence à Tunis, appelez afin de confirmer la disponibilité et le délai estimé. Les trajets médicaux programmés sont aussi organisés selon les besoins communiqués.",
       },
       {
         title: "Domicile et établissement de santé",
@@ -140,9 +143,16 @@ export const localeContent = {
         "Peut-on réserver un transport à l’avance ?",
         "Appelez pour vérifier les possibilités de planification.",
       ],
+      [
+        "Proposez-vous un service d’ambulance en urgence à Tunis ?",
+        "Pour une demande urgente de transport sanitaire, appelez afin de vérifier la disponibilité et le délai estimé. En cas d’urgence vitale, contactez le SAMU au 190 ou la Protection civile au 198.",
+      ],
     ],
-    contactTitle: "Organiser un transport sanitaire à Tunis",
-    contactText: "Appelez pour communiquer votre demande et vérifier les disponibilités.",
+    contactTitle: "Ambulance et transport sanitaire en urgence à Tunis",
+    contactText: "Appelez pour décrire votre besoin et vérifier la disponibilité d’une ambulance privée ainsi que le délai estimé.",
+    emergencyNote: "En cas d’urgence vitale, contactez directement les services publics de secours :",
+    samuLabel: "SAMU",
+    civilProtectionLabel: "Protection civile",
   },
   ar: {
     navLabel: "التنقل الرئيسي",
@@ -161,15 +171,15 @@ export const localeContent = {
     kicker: "نقل صحي خاص · تونس",
     h1: "إسعاف خاص في تونس – خدمات النقل الصحي بالباردو والمنزه",
     intro:
-      "هل تبحثون عن سيارة إسعاف خاصة في تونس؟ اتصلوا بفريقنا لتنظيم نقل صحي أو التنقل بين المنزل ومؤسسة صحية أو لموعد طبي. يتم تأكيد إمكانية التكفل حسب الطلب والتوفر.",
+      "هل تحتاجون إلى سيارة إسعاف بشكل عاجل في تونس؟ اتصلوا بفريقنا للتحقق من توفر النقل الصحي والمدة التقديرية حسب الطلب. في الحالات الطبية المهددة للحياة، اتصلوا مباشرة بالإسعاف الطبي (190) أو الحماية المدنية (198).",
     heroAlt: "سيارة إسعاف مخصصة للنقل الصحي",
     areaSummary: "تونس · باردو · المنزه من 1 إلى 9",
-    servicesTitle: "خدمات النقل الصحي في تونس",
-    servicesIntro: "تنظيم التنقلات الطبية حسب احتياجات المريض. اتصلوا بنا لمناقشة ظروف النقل.",
+    servicesTitle: "سيارة إسعاف ونقل صحي عاجل في تونس",
+    servicesIntro: "للطلبات العاجلة للنقل الصحي في تونس، اتصلوا للتحقق من توفر سيارة إسعاف والمدة التقديرية. كما يمكن تنظيم الرحلات الطبية المبرمجة حسب احتياجات المريض.",
     services: [
       {
-        title: "نقل صحي",
-        text: "نقل المرضى في إطار تنقل طبي مبرمج، حسب الاحتياجات التي يتم توضيحها.",
+        title: "نقل صحي عاجل أو مبرمج",
+        text: "لطلب سيارة إسعاف بشكل عاجل في تونس، اتصلوا للتحقق من التوفر والمدة التقديرية. كما ننظم الرحلات الطبية المبرمجة حسب الاحتياجات الموضحة.",
       },
       {
         title: "من المنزل إلى المؤسسة الصحية",
@@ -208,9 +218,13 @@ export const localeContent = {
         "اتصلوا بالفريق لمناقشة النقل إلى المؤسسة الصحية المطلوبة.",
       ],
       ["هل يمكن حجز النقل مسبقاً؟", "اتصلوا للتحقق من إمكانية التخطيط المسبق."],
+      ["هل توفرون سيارة إسعاف بشكل عاجل في تونس؟", "للطلبات العاجلة للنقل الصحي، اتصلوا للتحقق من التوفر والمدة التقديرية. في الحالات المهددة للحياة، اتصلوا بالإسعاف الطبي على 190 أو الحماية المدنية على 198."],
     ],
-    contactTitle: "تنظيم نقل صحي في تونس",
-    contactText: "اتصلوا لتوضيح طلبكم والتحقق من التوفر.",
+    contactTitle: "سيارة إسعاف ونقل صحي عاجل في تونس",
+    contactText: "اتصلوا لشرح احتياجكم والتحقق من توفر سيارة إسعاف والمدة التقديرية.",
+    emergencyNote: "في الحالات الطبية المهددة للحياة، اتصلوا مباشرة بخدمات النجدة العمومية:",
+    samuLabel: "الإسعاف الطبي SAMU",
+    civilProtectionLabel: "الحماية المدنية",
   },
   en: {
     navLabel: "Main navigation",
@@ -229,16 +243,16 @@ export const localeContent = {
     kicker: "Private patient transport · Tunis",
     h1: "Private Ambulance in Tunis – Medical Transport in Le Bardo and El Menzah",
     intro:
-      "Looking for a private ambulance in Tunis? Contact our team to arrange patient transport, a journey between home and a health facility, or travel to a medical appointment. Acceptance depends on the request and availability.",
+      "Need an ambulance urgently in Tunis? Contact our team to check private patient transport availability and the estimated wait for your request. For a life-threatening emergency, call SAMU (190) or Civil Protection (198) directly.",
     heroAlt: "Ambulance used for patient transport",
     areaSummary: "Tunis · Le Bardo · El Menzah 1 to 9",
-    servicesTitle: "Patient transport services in Tunis",
+    servicesTitle: "Urgent ambulance and patient transport in Tunis",
     servicesIntro:
-      "Medical journeys arranged around the patient's needs. Call to discuss transport requirements.",
+      "For urgent patient transport in Tunis, call to check whether a private ambulance is available and ask for an estimated wait. Scheduled medical journeys are also arranged around the patient's needs.",
     services: [
       {
-        title: "Patient transport",
-        text: "Patient transport for a planned medical journey, based on the needs shared with our team.",
+        title: "Urgent or scheduled patient transport",
+        text: "For an ambulance in an urgent situation in Tunis, call to confirm availability and the estimated wait. Scheduled medical journeys can also be arranged.",
       },
       {
         title: "Home and health facilities",
@@ -284,8 +298,12 @@ export const localeContent = {
         "Contact the team to discuss transport to your chosen health facility.",
       ],
       ["Can I arrange transport in advance?", "Call to check scheduling options."],
+      ["Can I request an ambulance urgently in Tunis?", "For urgent patient transport, call to check availability and the estimated wait. For a life-threatening emergency, call SAMU on 190 or Civil Protection on 198."],
     ],
-    contactTitle: "Arrange patient transport in Tunis",
-    contactText: "Call to share your request and check availability.",
+    contactTitle: "Urgent ambulance and patient transport in Tunis",
+    contactText: "Call to explain your needs and check private ambulance availability and the estimated wait.",
+    emergencyNote: "For a life-threatening medical emergency, contact public emergency services directly:",
+    samuLabel: "SAMU",
+    civilProtectionLabel: "Civil Protection",
   },
 } satisfies Record<Locale, LocaleStrings>;
