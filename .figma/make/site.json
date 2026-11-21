@@ -4,6 +4,9 @@
   "robots": {
     "index": true
   },
+  "icons": {
+    "icon": "/meher/favicon.png"
+  },
   "accessibility": {
     "addBypassLinks": false,
     "ignoreReducedMotion": false

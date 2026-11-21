@@ -185,7 +185,7 @@ export default function App() {
       <header className="sticky top-0 z-50 border-b border-foreground/5 bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-5 lg:px-8">
           <a href="#home" className="flex shrink-0 items-center" aria-label={`${BUSINESS.name} — ${c.nav[0][0]}`}>
-            <img src="/meher/logo.svg" alt="Meher Ambulance Service" className="h-12 w-auto md:h-14" />
+            <img src="/meher/logo.png" alt="Meher Ambulance Service" className="h-12 w-auto md:h-14" />
           </a>
           <nav className="hidden items-center gap-5 lg:flex" aria-label={c.navLabel}>
             {c.nav.map(([label, id]) => (
@@ -530,7 +530,7 @@ export default function App() {
       <footer className="border-t border-foreground/10 py-9">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-5 text-center sm:flex-row sm:px-6 sm:text-start lg:px-8">
           <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <img src="/meher/logo.svg" alt="Meher Ambulance Service" className="h-11 w-auto" />
+            <img src="/meher/logo.png" alt="Meher Ambulance Service" className="h-11 w-auto" />
             <p className="text-xs text-muted-foreground">© 2026 {BUSINESS.name}. {c.areaSummary}</p>
           </div>
           <a href={`mailto:${BUSINESS.email}`} className="text-xs text-muted-foreground hover:text-foreground">{BUSINESS.email}</a>
