@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
-@theme {
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-muted: var(--primary-muted);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
   --font-sans: system-ui, "Noto Sans Arabic", sans-serif;
   --font-heading: system-ui, "Noto Sans Arabic", sans-serif;
+}
+
+:root {
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.18 0.008 25);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.008 25);
+  --muted: oklch(0.965 0.006 25);
+  --muted-foreground: oklch(0.49 0.01 25);
+  --primary: oklch(0.47 0.19 28);
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-muted: oklch(0.96 0.025 25);
+  --border: oklch(0.91 0.008 25);
+  --ring: oklch(0.68 0.15 28);
+  --radius: 0.75rem;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 76px;
+    scroll-padding-top: 5rem;
   }
 
   body {
     min-width: 320px;
-    background: #ffffff;
-    color: #263445;
+    background: var(--background);
+    color: var(--foreground);
     font-family: system-ui, "Noto Sans Arabic", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   ::selection {
-    background: #2878b8;
+    background: #b40000;
     color: white;
   }
 
@@ -34,12 +60,16 @@
   }
 
   :focus-visible {
-    outline: 3px solid #2878b8;
+    outline: 3px solid var(--ring);
     outline-offset: 3px;
   }
 }
 
 @layer components {
+  .section-space {
+    padding-block: 6rem;
+  }
+
   .coverage-summary {
     list-style: none;
   }
@@ -74,101 +104,43 @@
     }
   }
 
-  .section-space {
-    padding-block: 7rem;
+  .hero-section {
+    contain: layout style;
   }
 
-  .call-button {
-    display: inline-flex;
-    min-height: 48px;
-    align-items: center;
-    justify-content: center;
-    gap: 0.625rem;
-    border-radius: 0.75rem;
-    background: #e63946;
-    color: white;
-    font-family: "Poppins", sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.015em;
-    box-shadow: 0 10px 25px rgba(230, 57, 70, 0.22);
-    transition:
-      transform 180ms ease,
-      background-color 180ms ease,
-      box-shadow 180ms ease;
+  .hero-fade-up {
+    animation: hero-fade-up 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  .call-button:hover {
-    transform: translateY(-2px);
-    background: #cf2d3a;
-    box-shadow: 0 14px 30px rgba(230, 57, 70, 0.3);
+  @keyframes hero-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .service-card {
-    box-shadow: 0 12px 40px rgba(18, 52, 90, 0.05);
-    transition:
-      transform 200ms ease,
-      box-shadow 200ms ease,
-      border-color 200ms ease;
-  }
-
-  .service-card:hover {
-    transform: translateY(-6px);
-    border-color: #bfdcf2;
-    box-shadow: 0 22px 45px rgba(18, 52, 90, 0.11);
-  }
-}
-
-.bg-medical-pattern {
-  background-image: radial-gradient(#2878b8 0.8px, transparent 0.8px);
-  background-size: 24px 24px;
-}
-
-.map-lines {
-  background-image:
-    linear-gradient(
-      30deg,
-      transparent 48%,
-      rgba(255, 255, 255, 0.17) 49%,
-      rgba(255, 255, 255, 0.17) 51%,
-      transparent 52%
-    ),
-    linear-gradient(
-      120deg,
-      transparent 48%,
-      rgba(255, 255, 255, 0.12) 49%,
-      rgba(255, 255, 255, 0.12) 51%,
-      transparent 52%
-    );
-  background-size: 80px 80px;
-}
-
-.cta-rings {
-  background-image: radial-gradient(
-    circle at center,
-    transparent 0,
-    transparent 100px,
-    rgba(255, 255, 255, 0.08) 101px,
-    transparent 103px,
-    transparent 180px,
-    rgba(255, 255, 255, 0.06) 181px,
-    transparent 183px
-  );
-}
-
-@media (max-width: 767px) {
-  .section-space {
-    padding-block: 5rem;
+  @keyframes gallery-caption-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   *,
   *::before,
   *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
 }

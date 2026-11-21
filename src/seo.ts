@@ -3,33 +3,34 @@ import { DEFAULT_PHONE_NUMBERS } from "./business";
 export type Locale = "fr" | "ar" | "en";
 
 export const BUSINESS = {
-  name: "Ambulance Tunis",
+  name: "Meher Ambulance Service",
+  email: "contact@meherambulance.tn",
   phoneNumbers: [
     import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBERS[0],
     DEFAULT_PHONE_NUMBERS[1],
   ],
   phone: import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBERS[0],
-  siteUrl: import.meta.env.VITE_SITE_URL?.replace(/\/$/, "") ?? "",
+  siteUrl: import.meta.env.VITE_SITE_URL?.replace(/\/$/, "") ?? "https://meherambulance.tn",
 };
 
 export const localeMeta: Record<Locale, { lang: string; title: string; description: string }> = {
   fr: {
     lang: "fr-TN",
-    title: "Ambulance en urgence à Tunis | Transport sanitaire privé",
+    title: "Meher Ambulance Tunis | Ambulance et transport sanitaire",
     description:
-      "Besoin d’une ambulance en urgence à Tunis ? Appelez pour vérifier la disponibilité et le délai estimé. Urgence vitale : SAMU 190 ou Protection civile 198.",
+      "Ambulance à Tunis, transport sanitaire, VSL et transport avec couveuse. Appelez Meher Ambulance pour vérifier disponibilité et délai estimé.",
   },
   ar: {
     lang: "ar-TN",
-    title: "إسعاف خاص في تونس | نقل صحي بالباردو والمنزه",
+    title: "مهر للإسعاف في تونس | نقل صحي وسيارة إسعاف",
     description:
-      "اتصلوا بخدمة Ambulance Tunis لتنظيم النقل الصحي في تونس والباردو وأحياء المنزه من 1 إلى 9.",
+      "خدمات الإسعاف والنقل الصحي وVSL ونقل الحاضنات في تونس. اتصلوا للتحقق من التوفر والمدة التقديرية.",
   },
   en: {
     lang: "en-TN",
-    title: "Private Ambulance in Tunis | Patient Transport in Le Bardo and El Menzah",
+    title: "Meher Ambulance Tunis | Ambulance and Patient Transport",
     description:
-      "Contact Ambulance Tunis to arrange patient transport in Tunis, Le Bardo and El Menzah districts 1 to 9.",
+      "Ambulance, patient transport, VSL and incubator transport in Tunis. Call Meher Ambulance to confirm availability and estimated wait.",
   },
 };
 
@@ -78,6 +79,8 @@ export const localeContent = {
     nav: [
       ["Accueil", "home"],
       ["Services", "services"],
+      ["Galerie", "gallery"],
+      ["À propos", "about"],
       ["Pourquoi nous choisir", "why"],
       ["Zones", "areas"],
       ["Contact", "contact"],
@@ -164,6 +167,8 @@ export const localeContent = {
     nav: [
       ["الرئيسية", "home"],
       ["الخدمات", "services"],
+      ["المعرض", "gallery"],
+      ["من نحن", "about"],
       ["لماذا نحن", "why"],
       ["المناطق", "areas"],
       ["اتصل بنا", "contact"],
@@ -236,6 +241,8 @@ export const localeContent = {
     nav: [
       ["Home", "home"],
       ["Services", "services"],
+      ["Gallery", "gallery"],
+      ["About", "about"],
       ["Why choose us", "why"],
       ["Areas", "areas"],
       ["Contact", "contact"],

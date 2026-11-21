@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => {
 });
 
 function multilingualSeoPages(): Plugin {
-  const siteUrl = (process.env.VITE_SITE_URL || "").replace(/\/$/, "");
+  const siteUrl = (process.env.VITE_SITE_URL || "https://meherambulance.tn").replace(/\/$/, "");
   const phoneNumbers = [
     process.env.VITE_PHONE_NUMBER?.trim() || DEFAULT_PHONE_NUMBERS[0],
     DEFAULT_PHONE_NUMBERS[1],
@@ -59,27 +59,27 @@ function multilingualSeoPages(): Plugin {
       path: "fr",
       lang: "fr-TN",
       og: "fr_TN",
-      title: "Ambulance en urgence à Tunis | Transport sanitaire privé",
+      title: "Meher Ambulance Tunis | Ambulance et transport sanitaire",
       description:
-        "Besoin d’une ambulance en urgence à Tunis ? Appelez pour vérifier la disponibilité et le délai estimé. Urgence vitale : SAMU 190 ou Protection civile 198.",
+        "Ambulance à Tunis, transport sanitaire, VSL et transport avec couveuse. Appelez Meher Ambulance pour vérifier disponibilité et délai estimé.",
       service: "Transport sanitaire privé à Tunis, au Bardo et à El Menzah",
     },
     {
       path: "ar",
       lang: "ar-TN",
       og: "ar_TN",
-      title: "إسعاف خاص في تونس | نقل صحي بالباردو والمنزه",
+      title: "مهر للإسعاف في تونس | نقل صحي وسيارة إسعاف",
       description:
-        "اتصلوا بخدمة Ambulance Tunis لتنظيم النقل الصحي في تونس والباردو وأحياء المنزه من 1 إلى 9.",
+        "خدمات الإسعاف والنقل الصحي وVSL ونقل الحاضنات في تونس. اتصلوا للتحقق من التوفر والمدة التقديرية.",
       service: "خدمات النقل الصحي في تونس والباردو والمنزه",
     },
     {
       path: "en",
       lang: "en-TN",
       og: "en_TN",
-      title: "Private Ambulance in Tunis | Patient Transport in Le Bardo and El Menzah",
+      title: "Meher Ambulance Tunis | Ambulance and Patient Transport",
       description:
-        "Contact Ambulance Tunis to arrange patient transport in Tunis, Le Bardo and El Menzah districts 1 to 9.",
+        "Ambulance, patient transport, VSL and incubator transport in Tunis. Call Meher Ambulance to confirm availability and estimated wait.",
       service: "Private patient transport in Tunis, Le Bardo and El Menzah",
     },
   ];
@@ -122,7 +122,7 @@ function multilingualSeoPages(): Plugin {
           )
           .replace(
             "</head>",
-            `    <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Service", name: page.service, provider: { "@type": "Organization", name: "Ambulance Tunis", telephone: phoneNumbers[0], contactPoint: [{ "@type": "ContactPoint", telephone: phoneNumbers[1] }] }, areaServed: ["Le Bardo", "El Menzah"], inLanguage: page.lang })}</script>\n  </head>`,
+            `    <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Service", name: page.service, provider: { "@type": "Organization", name: "Meher Ambulance Service", telephone: phoneNumbers[0], contactPoint: [{ "@type": "ContactPoint", telephone: phoneNumbers[1], email: "contact@meherambulance.tn" }] }, areaServed: ["Le Bardo", "El Menzah"], inLanguage: page.lang })}</script>\n  </head>`,
           )
           .replace(
             "</head>",
