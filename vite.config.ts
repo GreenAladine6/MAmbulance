@@ -83,6 +83,19 @@ function multilingualSeoPages(): Plugin {
       service: "Private patient transport in Tunis, Le Bardo and El Menzah",
     },
   ];
+  const sitemapImages = [
+    "ambulance-hero.webp",
+    "ambulance-front.webp",
+    "ambulance-side.webp",
+    "ambulance-rear.webp",
+    "ambulance-other-side.webp",
+    "interior.webp",
+    "interior-one.webp",
+    "interior-two.webp",
+    "interior-three.webp",
+  ];
+  const xmlEscape = (value: string) =>
+    value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&apos;");
   const esc = (value: string) =>
     value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
   return {
@@ -131,8 +144,11 @@ function multilingualSeoPages(): Plugin {
         const pageDir = path.join(outputDir, page.path);
         fs.mkdirSync(pageDir, { recursive: true });
         fs.writeFileSync(path.join(pageDir, "index.html"), html);
+        const imageEntries = sitemapImages
+          .map((image) => `    <image:image><image:loc>${xmlEscape(`${siteUrl}/meher/${image}`)}</image:loc></image:image>`)
+          .join("\n");
         urls.push(
-          `  <url><loc>${canonical}</loc><xhtml:link rel="alternate" hreflang="fr-TN" href="${siteUrl}/fr/"/><xhtml:link rel="alternate" hreflang="ar-TN" href="${siteUrl}/ar/"/><xhtml:link rel="alternate" hreflang="en-TN" href="${siteUrl}/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}/fr/"/></url>`,
+          `  <url>\n    <loc>${xmlEscape(canonical)}</loc>\n    <xhtml:link rel="alternate" hreflang="fr-TN" href="${xmlEscape(`${siteUrl}/fr/`)}"/>\n    <xhtml:link rel="alternate" hreflang="ar-TN" href="${xmlEscape(`${siteUrl}/ar/`)}"/>\n    <xhtml:link rel="alternate" hreflang="en-TN" href="${xmlEscape(`${siteUrl}/en/`)}"/>\n    <xhtml:link rel="alternate" hreflang="x-default" href="${xmlEscape(`${siteUrl}/fr/`)}"/>\n${imageEntries}\n  </url>`,
         );
       }
       fs.writeFileSync(
@@ -142,7 +158,7 @@ function multilingualSeoPages(): Plugin {
       if (siteUrl) {
         fs.writeFileSync(
           path.join(outputDir, "sitemap.xml"),
-          `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join("\n")}\n</urlset>`,
+          `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>`,
         );
       }
     },
