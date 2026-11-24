@@ -10,7 +10,7 @@ export const BUSINESS = {
     DEFAULT_PHONE_NUMBERS[1],
   ],
   phone: import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBERS[0],
-  siteUrl: import.meta.env.VITE_SITE_URL?.replace(/\/$/, "") ?? "https://meherambulance.tn",
+  siteUrl: import.meta.env.VITE_SITE_URL?.replace(/\/$/, "") ?? "https://ambulancemeher.tn",
 };
 
 export const localeMeta: Record<Locale, { lang: string; title: string; description: string }> = {

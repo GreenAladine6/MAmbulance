@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => {
 });
 
 function multilingualSeoPages(): Plugin {
-  const siteUrl = (process.env.VITE_SITE_URL || "https://meherambulance.tn").replace(/\/$/, "");
+  const siteUrl = (process.env.VITE_SITE_URL || "https://ambulancemeher.tn").replace(/\/$/, "");
   const phoneNumbers = [
     process.env.VITE_PHONE_NUMBER?.trim() || DEFAULT_PHONE_NUMBERS[0],
     DEFAULT_PHONE_NUMBERS[1],

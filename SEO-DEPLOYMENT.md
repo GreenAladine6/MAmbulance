@@ -37,6 +37,6 @@ Complete the Google Business Profile with the verified business name, primary ph
 ## Remaining limitations
 
 - The website remains client-rendered; meaningful SSR/prerendering would improve reliability for crawlers that do not execute JavaScript.
-- The production domain must be supplied before an absolute sitemap can be completed. Google controls whether it displays the phone number in search results; structured data and visible contact information do not guarantee a particular search snippet.
+- The configured production domain is `https://ambulancemeher.tn`. Google controls whether it displays the phone number in search results; structured data and visible contact information do not guarantee a particular search snippet.
 - The hero, gallery, and about section use local ambulance and interior photos supplied in the Meher project. Confirm image usage rights with the client before publishing.
 - No Lighthouse score, live structured-data validator, external link check, or Google indexing result is claimed. Build output was checked locally; deployment-specific checks require the production domain.
