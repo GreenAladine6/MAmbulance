@@ -1,42 +1,42 @@
-# SEO audit and deployment notes
+# SEO implementation and deployment notes
 
-## Audit findings
+## Audit summary
 
-- The project is React 19 + Vite 8 with Tailwind CSS 4. It mounts one React application from `src/main.tsx`.
-- Rendering is client-side; there is no router, server rendering, static prerenderer, or test script. Static language documents below improve initial metadata and provide crawlable URLs, but the page body still depends on JavaScript.
-- Before this update, the site was French-only. The HTML shell had LocalBusiness JSON-LD with an unverified Tunis address and Grand Tunis coverage, and the Figma site configuration emitted `Disallow: /` because indexing was disabled.
-- The site used a placeholder telephone number in several components, three remote Unsplash images, and remote Google Fonts. The page had semantic sections and a fixed mobile call action, but no language switcher, RTL handling, or skip link.
-- Deployment uses Figma Make's static adapter. No production domain, business telephone, physical address, hours, coordinates, logo asset, or social profile was supplied.
-- The installed dependencies match the React/Vite/Tailwind scaffold. No unused runtime dependency was found; runtime dependencies are React and React DOM.
+- The site uses React 19, Vite 8 and Tailwind CSS 4. It has French, Arabic and English routes and is deployed as static files through Figma Make.
+- Before this work, the built HTML route files had an empty React root, so page text depended on JavaScript. Metadata was partly changed after hydration, and the public sitemap did not consistently match the declared production host.
+- Some visible translations contained claims for 24/7 availability, sub-hour arrival, nationwide service, specific vehicle classes/equipment and staff credentials. Those claims were not supported by confirmed business information, so they were removed or replaced with wording that asks customers to confirm availability.
+- No physical address, business hours, social profile URLs, GA4 measurement ID or hosting redirect rules are configured. No separate location pages were justified by distinct service information.
 
 ## Implemented
 
-- French, Arabic, and English content is available at `/fr/`, `/ar/`, and `/en/`; each has a distinct title, description, Open Graph locale, canonical link, hreflang set, and Service JSON-LD.
-- Arabic uses RTL and Arabic-language copy. Language links retain the current section fragment.
-- Service-area copy names Tunis, Le Bardo, and El Menzah 1–9, with availability confirmation language. Unverified Grand Tunis neighborhoods have been removed.
-- The supplied Meher Ambulance project provides two numbers; both are centralized in [`src/business.ts`](src/business.ts): +216 94 000 009 and +216 50 820 829. `VITE_PHONE_NUMBER` can override the primary line. Both numbers appear in the contact section and fixed WhatsApp/call controls; the primary number is in the provider telephone field and the second is in its contact point in JSON-LD.
-- `VITE_SITE_URL` controls absolute canonical/hreflang URLs and sitemap generation. Without a configured domain, links are site-root-relative and the build omits `sitemap.xml` rather than publishing invalid or guessed URLs.
-- `robots.txt` allows crawling. Figma's indexing setting is enabled.
-- The hero image has explicit dimensions and high fetch priority. Remote font loading was removed to reduce third-party requests. Focus indicators and a translated skip link were added.
+- The existing routes `/fr/`, `/ar/` and `/en/` now receive locale-specific static HTML rendered from the React page. The client hydrates that HTML when JavaScript loads.
+- Each route has a localized title and description, `lang` and Arabic `dir="rtl"`, canonical URL, reciprocal hreflang links and `x-default`.
+- The build generates `robots.txt` and an XML sitemap from the same language route list. The sitemap contains canonical language URLs and their alternates.
+- Open Graph and Twitter metadata use the local ambulance hero image. Its actual dimensions are 1672 × 941.
+- JSON-LD describes the organization, website and service. It includes the project’s existing business name, phone, email and logo; it omits an address, opening hours, reviews, ratings, coordinates and credentials.
+- The coverage section lists Tunis, Le Bardo, El Menzah, Ennasr, Ariana, La Soukra and Mnihla while distinguishing areas that still need address-level confirmation. No thin location landing pages were added.
+- Contact links remain `tel:` and `wa.me` links. The supplied GTM container `GTM-MTWRQ2QV` is loaded on all locale routes only after the visitor accepts analytics in the localized preference prompt. The choice is saved and can be changed from the footer. Phone, WhatsApp, language and CTA events go to `dataLayer` and a `meher:analytics` browser event. An optional GA4 ID can be set with `VITE_GA4_ID`.
+- Existing WebP images are retained; the hero has explicit intrinsic dimensions and high fetch priority, while below-the-fold images are lazy-loaded. Remote font requests were not added.
 
-## Production setup
+## Build and checks
 
-Set these environment variables in the production build environment:
+- `npm run build` succeeds and writes `/fr/`, `/ar/`, `/en/`, `robots.txt` and `sitemap.xml` into `dist/`.
+- `npx tsc --noEmit` succeeds.
+- The project has no test script or existing test suite.
+- The production domain could not be checked through the available live page reader, so this report does not claim live HTTP status, redirect, Lighthouse or Search Console results.
 
-```sh
-VITE_SITE_URL=https://your-verified-domain.tld
-VITE_PHONE_NUMBER=+21694000009
-```
+## Production setup and manual work
 
-Set `VITE_SITE_URL` to the real HTTPS website domain. `VITE_PHONE_NUMBER` is optional unless the number changes. Rebuild and verify that `/sitemap.xml` lists the three canonical language URLs and `robots.txt` points to it. The generated sitemap URL will be `https://your-verified-domain.tld/sitemap.xml`.
+1. Confirm the public canonical host is `https://www.ambulancemeher.tn`. Configure the hosting platform to redirect HTTP and the apex host to HTTPS `www`. Vite's static build cannot create host-level 301 redirects by itself.
+2. If the canonical host or primary telephone changes, set `VITE_SITE_URL` and optionally `VITE_PHONE_NUMBER` in the production build environment, then rebuild. Keep the visible phone, WhatsApp, JSON-LD and external profiles consistent.
+3. Confirm the business email and telephone numbers, listed service areas, service descriptions, image rights and the exact registered business name before publishing.
+4. Confirm the analytics preference prompt meets the privacy rules that apply to visitors. The GTM container ID can be replaced with `VITE_GTM_ID`; set `VITE_GA4_ID` only if adding a separate GA4 tag. Configure GTM to use `phone_click`, `whatsapp_click`, `language_change` and `cta_click`. `form_submit` is reserved for a future form; no form currently exists.
+5. Verify the property in Google Search Console, submit `https://www.ambulancemeher.tn/sitemap.xml`, then inspect each language URL and review Google's selected canonical after deployment.
+6. Review legitimate backlink opportunities manually: local clinics and hospitals that accept referrals, municipal or regional health directories, professional ambulance/transport associations, and verified local business directories. Do not register or publish until the business approves the details.
 
-For Search Console, verify domain ownership with the DNS TXT method (or use the HTML tag/file method provided by Search Console), submit the sitemap URL, then inspect `/fr/`, `/ar/`, and `/en/` and confirm their selected canonical URLs. This setup does not claim that Google has indexed the site.
+## Remaining hosting and business checks
 
-Complete the Google Business Profile with the verified business name, primary phone, actual service areas, hours, and physical location only if customers can visit it. Keep the same details on the site and profile. Do not add ratings, reviews, credentials, emergency response guarantees, or an address until verified. GA4 is not configured because it was not requested and no measurement ID was supplied.
-
-## Remaining limitations
-
-- The website remains client-rendered; meaningful SSR/prerendering would improve reliability for crawlers that do not execute JavaScript.
-- The configured production domain is `https://ambulancemeher.tn`. Google controls whether it displays the phone number in search results; structured data and visible contact information do not guarantee a particular search snippet.
-- The hero, gallery, and about section use local ambulance and interior photos supplied in the Meher project. Confirm image usage rights with the client before publishing.
-- No Lighthouse score, live structured-data validator, external link check, or Google indexing result is claimed. Build output was checked locally; deployment-specific checks require the production domain.
+- Confirm that the hosting platform serves the generated directory routes directly and that all three return HTTP 200 without a redirect chain.
+- Confirm HTTP/apex redirects, TLS certificate, live `robots.txt`, live sitemap, social image previews, image rights and mobile rendering in the deployed site.
+- Business-owner confirmation is needed for operating hours, 24/7 availability, actual service reach at candidate neighborhoods, specialist transport/equipment, address details, official social accounts and any credentials. These are intentionally absent from structured data and unsupported marketing claims were removed.
+- Search ranking changes are not immediate or guaranteed by these code updates.

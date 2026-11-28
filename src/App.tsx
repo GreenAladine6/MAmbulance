@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { coverageCopy, coverageGroups } from "./coverage";
 import { translations as clientCopy } from "./clientCopy";
+import { enableAnalyticsAfterConsent, revokeAnalyticsConsent, trackEvent } from "./analytics";
 import { BUSINESS, localeContent, localeMeta, type Locale } from "./seo";
 
 const serviceIconPaths: ReactNode[] = [
@@ -117,23 +118,45 @@ const galleryDescriptions: Record<Locale, { title: string; text: string }[]> = {
 
 const trustStats: Record<Locale, { value: string; label: string }[]> = {
   fr: [
-    { value: "Catégorie A", label: "Ambulances équipées" },
-    { value: "VSL", label: "Transport assis" },
-    { value: "Couveuse", label: "Transport spécialisé" },
+    { value: "Ambulance", label: "Transport sanitaire" },
+    { value: "Trajet", label: "Organisation sur demande" },
+    { value: "Contact", label: "Disponibilité à confirmer" },
   ],
   en: [
-    { value: "Category A", label: "Equipped ambulances" },
-    { value: "VSL", label: "Seated transport" },
-    { value: "Incubator", label: "Specialist transport" },
+    { value: "Ambulance", label: "Patient transport" },
+    { value: "Journey", label: "Arranged on request" },
+    { value: "Contact", label: "Availability confirmed" },
   ],
   ar: [
-    { value: "الفئة أ", label: "سيارات إسعاف مجهزة" },
-    { value: "VSL", label: "نقل جالس" },
-    { value: "حاضنة", label: "نقل متخصص" },
+    { value: "إسعاف", label: "نقل صحي" },
+    { value: "رحلة", label: "تنظيم حسب الطلب" },
+    { value: "اتصال", label: "تأكيد التوفر" },
   ],
 };
 
+const analyticsConsentCopy: Record<Locale, { message: string; accept: string; reject: string; settings: string }> = {
+  fr: {
+    message: "Autorisez-vous la mesure d’audience Google Analytics ? Vous pouvez modifier ce choix à tout moment.",
+    accept: "Accepter",
+    reject: "Refuser",
+    settings: "Préférences de mesure d’audience",
+  },
+  en: {
+    message: "Allow Google Analytics to measure site visits? You can change this choice at any time.",
+    accept: "Accept",
+    reject: "Decline",
+    settings: "Analytics preferences",
+  },
+  ar: {
+    message: "هل تسمحون باستخدام Google Analytics لقياس زيارات الموقع؟ يمكنكم تغيير هذا الاختيار في أي وقت.",
+    accept: "موافقة",
+    reject: "رفض",
+    settings: "تفضيلات التحليلات",
+  },
+};
+
 function getLocale(): Locale {
+  if (typeof window === "undefined") return "fr";
   const route = window.location.pathname.split("/")[1];
   return route === "ar" || route === "en" ? route : "fr";
 }
@@ -142,12 +165,13 @@ function displayPhone(number: string) {
   return number.replace(/^\+216(\d{2})(\d{3})(\d{3})$/, "+216 $1 $2 $3");
 }
 
-export default function App() {
-  const [locale] = useState<Locale>(getLocale);
+export default function App({ initialLocale }: { initialLocale?: Locale }) {
+  const [locale] = useState<Locale>(() => initialLocale ?? getLocale());
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openCoverage, setOpenCoverage] = useState<Record<string, boolean>>({});
   const [selectedGalleryImage, setSelectedGalleryImage] = useState<number | null>(null);
+  const [analyticsConsent, setAnalyticsConsent] = useState<"accepted" | "rejected" | null>(null);
   const c = localeContent[locale];
   const client = clientCopy[locale];
   const coverage = coverageCopy[locale];
@@ -174,6 +198,50 @@ export default function App() {
       ?.setAttribute("content", meta.description);
   }, [meta, rtl]);
 
+  useEffect(() => {
+    const onDocumentClick = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest<HTMLAnchorElement>("a");
+      if (!link) return;
+      if (link.href.startsWith("tel:")) trackEvent("phone_click", { phone: link.href.slice(4) });
+      if (link.hostname === "wa.me") trackEvent("whatsapp_click");
+      if (link.hreflang) trackEvent("language_change", { language: link.hreflang });
+      if (link.dataset.cta) trackEvent("cta_click", { cta: link.dataset.cta });
+    };
+    document.addEventListener("click", onDocumentClick);
+    return () => document.removeEventListener("click", onDocumentClick);
+  }, []);
+
+  useEffect(() => {
+    const onAnalyticsConsent = (event: Event) => {
+      const consent = (event as CustomEvent<{ analytics?: boolean }>).detail;
+      if (typeof consent?.analytics !== "boolean") return;
+      const choice = consent.analytics ? "accepted" : "rejected";
+      setAnalyticsConsent(choice);
+      try {
+        localStorage.setItem("meher-analytics-consent", choice);
+      } catch {
+        // The choice still applies for this page when persistent storage is unavailable.
+      }
+      if (consent.analytics) enableAnalyticsAfterConsent();
+      else revokeAnalyticsConsent();
+    };
+    window.addEventListener("meher:analytics-consent", onAnalyticsConsent);
+    try {
+      const choice = localStorage.getItem("meher-analytics-consent");
+      if (choice === "accepted" || choice === "rejected") {
+        setAnalyticsConsent(choice);
+        if (choice === "accepted") enableAnalyticsAfterConsent();
+      }
+    } catch {
+      // Keep analytics off unless the visitor makes a choice on this page.
+    }
+    return () => window.removeEventListener("meher:analytics-consent", onAnalyticsConsent);
+  }, []);
+
+  const chooseAnalyticsConsent = (analytics: boolean) => {
+    window.dispatchEvent(new CustomEvent("meher:analytics-consent", { detail: { analytics } }));
+  };
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-background pb-36 text-foreground" dir={rtl ? "rtl" : "ltr"}>
       <a
@@ -199,7 +267,7 @@ export default function App() {
               {(["fr", "en", "ar"] as Locale[]).map((code) => (
                 <a
                   key={code}
-                  href={`/${code}/${window.location.hash}`}
+                  href={`/${code}/`}
                   lang={localeMeta[code].lang}
                   hrefLang={localeMeta[code].lang}
                   aria-current={locale === code ? "page" : undefined}
@@ -209,7 +277,7 @@ export default function App() {
                 </a>
               ))}
             </nav>
-            <a href={phoneHref(phoneNumbers[0])} className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+            <a href={phoneHref(phoneNumbers[0])} data-cta="header_call" className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
               <PhoneIcon /> <bdi dir="ltr">{displayPhone(phoneNumbers[0])}</bdi>
             </a>
           </div>
@@ -238,7 +306,7 @@ export default function App() {
             {(["fr", "en", "ar"] as Locale[]).map((code) => (
               <a
                 key={code}
-                href={`/${code}/${window.location.hash}`}
+                href={`/${code}/`}
                 lang={localeMeta[code].lang}
                 hrefLang={localeMeta[code].lang}
                 aria-current={locale === code ? "page" : undefined}
@@ -249,7 +317,7 @@ export default function App() {
               </a>
             ))}
           </nav>
-          <a href={phoneHref(phoneNumbers[0])} onClick={() => setMenuOpen(false)} className="mt-4 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground">
+          <a href={phoneHref(phoneNumbers[0])} data-cta="mobile_menu_call" onClick={() => setMenuOpen(false)} className="mt-4 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground">
             <PhoneIcon /> {c.call} <bdi dir="ltr">{displayPhone(phoneNumbers[0])}</bdi>
           </a>
         </div>
@@ -261,8 +329,8 @@ export default function App() {
             src="/meher/ambulance-hero.webp"
             alt=""
             aria-hidden="true"
-            width="1680"
-            height="945"
+            width="1672"
+            height="941"
             fetchPriority="high"
             decoding="async"
             className="absolute inset-0 h-full w-full object-cover object-center"
@@ -284,6 +352,7 @@ export default function App() {
                   <a
                     key={number}
                     href={phoneHref(number)}
+                    data-cta="hero_call"
                     className={`inline-flex min-h-12 items-center gap-2.5 rounded-lg px-5 py-3 text-sm font-semibold transition-all active:scale-[.98] ${index === 0 ? "bg-white text-primary shadow-lg shadow-black/20 hover:bg-white/90" : "border border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20"}`}
                   >
                     <PhoneIcon /> <bdi dir="ltr">{displayPhone(number)}</bdi>
@@ -516,7 +585,7 @@ export default function App() {
               <p className="mt-2 text-sm text-zinc-400">{locale === "fr" ? "Appelez pour discuter du trajet et vérifier la disponibilité." : locale === "en" ? "Call to discuss the journey and check availability." : "اتصلوا لمناقشة الرحلة والتحقق من التوفر."}</p>
               <div className="mt-7 space-y-3">
                 {phoneNumbers.map((number) => (
-                  <a key={number} href={phoneHref(number)} className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-center text-lg font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+                  <a key={number} href={phoneHref(number)} data-cta="contact_call" className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-center text-lg font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                     <PhoneIcon /> <bdi dir="ltr">{displayPhone(number)}</bdi>
                   </a>
                 ))}
@@ -534,16 +603,33 @@ export default function App() {
             <p className="text-xs text-muted-foreground">© 2026 {BUSINESS.name}. {c.areaSummary}</p>
           </div>
           <a href={`mailto:${BUSINESS.email}`} className="text-xs text-muted-foreground hover:text-foreground">{BUSINESS.email}</a>
+          <button type="button" onClick={() => setAnalyticsConsent(null)} className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+            {analyticsConsentCopy[locale].settings}
+          </button>
         </div>
       </footer>
+
+      {analyticsConsent === null && (
+        <aside aria-label={locale === "fr" ? "Préférences de mesure d’audience" : locale === "en" ? "Analytics preferences" : "تفضيلات التحليلات"} className="fixed inset-x-3 bottom-28 z-[60] mx-auto max-w-xl rounded-2xl border border-border bg-card p-4 text-card-foreground shadow-xl sm:inset-x-6 sm:bottom-32 sm:p-5">
+          <p className="text-sm leading-6">{analyticsConsentCopy[locale].message}</p>
+          <div className="mt-3 flex flex-wrap justify-end gap-2">
+            <button type="button" onClick={() => chooseAnalyticsConsent(false)} className="min-h-10 rounded-lg border border-border px-4 text-sm font-semibold hover:bg-muted">
+              {analyticsConsentCopy[locale].reject}
+            </button>
+            <button type="button" onClick={() => chooseAnalyticsConsent(true)} className="min-h-10 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
+              {analyticsConsentCopy[locale].accept}
+            </button>
+          </div>
+        </aside>
+      )}
 
       <div className="fixed bottom-3 end-3 z-50 grid gap-1.5 rounded-2xl bg-white/95 p-1.5 shadow-lg backdrop-blur-sm sm:bottom-6 sm:end-6">
         {phoneNumbers.map((number) => (
           <div key={number} className="flex items-center gap-2">
-            <a href={whatsappHref(number)} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp: ${displayPhone(number)}`} title={`WhatsApp: ${displayPhone(number)}`} className="grid size-11 shrink-0 place-items-center rounded-full bg-[#25D366] text-white hover:bg-[#1fbd5b]">
+            <a href={whatsappHref(number)} data-cta="whatsapp" target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp: ${displayPhone(number)}`} title={`WhatsApp: ${displayPhone(number)}`} className="grid size-11 shrink-0 place-items-center rounded-full bg-[#25D366] text-white hover:bg-[#1fbd5b]">
               <WhatsAppIcon />
             </a>
-            <a href={phoneHref(number)} aria-label={`${c.call}: ${displayPhone(number)}`} className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-3 text-xs font-bold text-primary-foreground hover:bg-primary/90 sm:px-4 sm:text-sm">
+            <a href={phoneHref(number)} data-cta="sticky_call" aria-label={`${c.call}: ${displayPhone(number)}`} className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-3 text-xs font-bold text-primary-foreground hover:bg-primary/90 sm:px-4 sm:text-sm">
               <PhoneIcon /> <span>{c.call}</span> <bdi dir="ltr">{displayPhone(number)}</bdi>
             </a>
           </div>

@@ -1,51 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://ambulancemeher.tn/fr/</loc>
-    <xhtml:link rel="alternate" hreflang="fr-TN" href="https://ambulancemeher.tn/fr/"/>
-    <xhtml:link rel="alternate" hreflang="ar-TN" href="https://ambulancemeher.tn/ar/"/>
-    <xhtml:link rel="alternate" hreflang="en-TN" href="https://ambulancemeher.tn/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ambulancemeher.tn/fr/"/>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-hero.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-front.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-side.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-rear.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-other-side.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-one.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-two.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-three.webp</image:loc></image:image>
+    <loc>https://www.ambulancemeher.tn/fr/</loc>
+    <xhtml:link rel="alternate" hreflang="fr-TN" href="https://www.ambulancemeher.tn/fr/" />
+    <xhtml:link rel="alternate" hreflang="ar-TN" href="https://www.ambulancemeher.tn/ar/" />
+    <xhtml:link rel="alternate" hreflang="en-TN" href="https://www.ambulancemeher.tn/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.ambulancemeher.tn/fr/" />
   </url>
   <url>
-    <loc>https://ambulancemeher.tn/ar/</loc>
-    <xhtml:link rel="alternate" hreflang="fr-TN" href="https://ambulancemeher.tn/fr/"/>
-    <xhtml:link rel="alternate" hreflang="ar-TN" href="https://ambulancemeher.tn/ar/"/>
-    <xhtml:link rel="alternate" hreflang="en-TN" href="https://ambulancemeher.tn/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ambulancemeher.tn/fr/"/>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-hero.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-front.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-side.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-rear.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-other-side.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-one.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-two.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-three.webp</image:loc></image:image>
+    <loc>https://www.ambulancemeher.tn/ar/</loc>
+    <xhtml:link rel="alternate" hreflang="fr-TN" href="https://www.ambulancemeher.tn/fr/" />
+    <xhtml:link rel="alternate" hreflang="ar-TN" href="https://www.ambulancemeher.tn/ar/" />
+    <xhtml:link rel="alternate" hreflang="en-TN" href="https://www.ambulancemeher.tn/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.ambulancemeher.tn/fr/" />
   </url>
   <url>
-    <loc>https://ambulancemeher.tn/en/</loc>
-    <xhtml:link rel="alternate" hreflang="fr-TN" href="https://ambulancemeher.tn/fr/"/>
-    <xhtml:link rel="alternate" hreflang="ar-TN" href="https://ambulancemeher.tn/ar/"/>
-    <xhtml:link rel="alternate" hreflang="en-TN" href="https://ambulancemeher.tn/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ambulancemeher.tn/fr/"/>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-hero.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-front.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-side.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-rear.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/ambulance-other-side.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-one.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-two.webp</image:loc></image:image>
-    <image:image><image:loc>https://ambulancemeher.tn/meher/interior-three.webp</image:loc></image:image>
+    <loc>https://www.ambulancemeher.tn/en/</loc>
+    <xhtml:link rel="alternate" hreflang="fr-TN" href="https://www.ambulancemeher.tn/fr/" />
+    <xhtml:link rel="alternate" hreflang="ar-TN" href="https://www.ambulancemeher.tn/ar/" />
+    <xhtml:link rel="alternate" hreflang="en-TN" href="https://www.ambulancemeher.tn/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.ambulancemeher.tn/fr/" />
   </url>
 </urlset>

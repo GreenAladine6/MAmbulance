@@ -1,4 +1,6 @@
-import { defineConfig, type HtmlTagDescriptor, type Plugin } from "vite";
+import { createElement, type ComponentType } from "react";
+import { renderToString } from "react-dom/server";
+import { createServer, defineConfig, type HtmlTagDescriptor, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import fs from "node:fs";
@@ -49,7 +51,7 @@ export default defineConfig(({ mode }) => {
 });
 
 function multilingualSeoPages(): Plugin {
-  const siteUrl = (process.env.VITE_SITE_URL || "https://ambulancemeher.tn").replace(/\/$/, "");
+  const siteUrl = (process.env.VITE_SITE_URL || "https://www.ambulancemeher.tn").replace(/\/$/, "");
   const phoneNumbers = [
     process.env.VITE_PHONE_NUMBER?.trim() || DEFAULT_PHONE_NUMBERS[0],
     DEFAULT_PHONE_NUMBERS[1],
@@ -59,28 +61,28 @@ function multilingualSeoPages(): Plugin {
       path: "fr",
       lang: "fr-TN",
       og: "fr_TN",
-      title: "Meher Ambulance Tunis | Ambulance et transport sanitaire",
+      title: "Meher Ambulance | Ambulance privée à Tunis – Transport sanitaire",
       description:
-        "Ambulance à Tunis, transport sanitaire, VSL et transport avec couveuse. Appelez Meher Ambulance pour vérifier disponibilité et délai estimé.",
-      service: "Transport sanitaire privé à Tunis, au Bardo et à El Menzah",
+        "Meher Ambulance propose le transport sanitaire à Tunis, au Bardo et à El Menzah. Appelez pour décrire le trajet et confirmer la disponibilité.",
+      service: "Transport sanitaire privé à Tunis",
     },
     {
       path: "ar",
       lang: "ar-TN",
       og: "ar_TN",
-      title: "مهر للإسعاف في تونس | نقل صحي وسيارة إسعاف",
+      title: "مهر للإسعاف | سيارة إسعاف خاصة في تونس والنقل الصحي",
       description:
-        "خدمات الإسعاف والنقل الصحي وVSL ونقل الحاضنات في تونس. اتصلوا للتحقق من التوفر والمدة التقديرية.",
-      service: "خدمات النقل الصحي في تونس والباردو والمنزه",
+        "توفر مهر للإسعاف خدمات النقل الصحي في تونس والباردو والمنزه. اتصلوا لشرح الرحلة والتحقق من التوفر.",
+      service: "النقل الصحي الخاص في تونس",
     },
     {
       path: "en",
       lang: "en-TN",
       og: "en_TN",
-      title: "Meher Ambulance Tunis | Ambulance and Patient Transport",
+      title: "Meher Ambulance | Private Ambulance and Patient Transport in Tunis",
       description:
-        "Ambulance, patient transport, VSL and incubator transport in Tunis. Call Meher Ambulance to confirm availability and estimated wait.",
-      service: "Private patient transport in Tunis, Le Bardo and El Menzah",
+        "Meher Ambulance provides patient transport in Tunis, Le Bardo and El Menzah. Call to discuss the journey and confirm availability.",
+      service: "Private patient transport in Tunis",
     },
   ];
   const sitemapImages = [
@@ -101,11 +103,25 @@ function multilingualSeoPages(): Plugin {
   return {
     name: "multilingual-seo-pages",
     apply: "build",
-    closeBundle() {
+    async closeBundle() {
       const outputDir = path.resolve(__dirname, "dist");
       const indexFile = path.join(outputDir, "index.html");
       if (!fs.existsSync(indexFile)) return;
       const original = fs.readFileSync(indexFile, "utf8");
+      const ssrServer = await createServer({
+        configFile: false,
+        root: __dirname,
+        plugins: [],
+        appType: "custom",
+        server: { middlewareMode: true, hmr: false, ws: false },
+      });
+      let ServerApp: ComponentType<{ initialLocale: "fr" | "ar" | "en" }>;
+      try {
+        ({ default: ServerApp } = await ssrServer.ssrLoadModule("/src/App.tsx"));
+      } catch (error) {
+        await ssrServer.close();
+        throw error;
+      }
       const alternates =
         pages
           .map(
@@ -115,8 +131,41 @@ function multilingualSeoPages(): Plugin {
           .join("\n    ") +
         `\n    <link rel="alternate" hreflang="x-default" href="${siteUrl}/fr/" />`;
       const urls: string[] = [];
+      let frenchIndex: string | undefined;
       for (const page of pages) {
         const canonical = `${siteUrl}/${page.path}/`;
+        const organizationId = `${siteUrl}/#organization`;
+        const structuredData = {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": organizationId,
+              name: "Meher Ambulance",
+              url: `${siteUrl}/fr/`,
+              logo: `${siteUrl}/meher/logo.png`,
+              telephone: phoneNumbers[0],
+              email: "contact@meherambulance.tn",
+            },
+            {
+              "@type": "WebSite",
+              "@id": `${siteUrl}/#website`,
+              name: "Meher Ambulance",
+              url: `${siteUrl}/fr/`,
+              inLanguage: ["fr-TN", "ar-TN", "en-TN"],
+              publisher: { "@id": organizationId },
+            },
+            {
+              "@type": "Service",
+              name: page.service,
+              serviceType: page.service,
+              provider: { "@id": organizationId },
+              areaServed: { "@type": "City", name: "Tunis" },
+              inLanguage: page.lang,
+            },
+          ],
+        };
+        const renderedApp = renderToString(createElement(ServerApp, { initialLocale: page.path as "fr" | "ar" | "en" }));
         const html = original
           .replace(
             /<html lang="[^"]+">/,
@@ -134,9 +183,14 @@ function multilingualSeoPages(): Plugin {
             `$1${esc(page.description)}$2`,
           )
           .replace(
-            "</head>",
-            `    <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Service", name: page.service, provider: { "@type": "Organization", name: "Meher Ambulance Service", telephone: phoneNumbers[0], contactPoint: [{ "@type": "ContactPoint", telephone: phoneNumbers[1], email: "contact@meherambulance.tn" }] }, areaServed: ["Le Bardo", "El Menzah"], inLanguage: page.lang })}</script>\n  </head>`,
+            /(<meta name="twitter:card" content=")[^"]*("\s*\/?>)/,
+            '$1summary_large_image$2',
           )
+          .replace(
+            "</head>",
+            `    <meta property="og:site_name" content="Meher Ambulance" />\n    <meta property="og:url" content="${canonical}" />\n    <meta property="og:image" content="${siteUrl}/meher/ambulance-hero.webp" />\n    <meta property="og:image:width" content="1672" />\n    <meta property="og:image:height" content="941" />\n    <meta name="twitter:title" content="${esc(page.title)}" />\n    <meta name="twitter:description" content="${esc(page.description)}" />\n    <meta name="twitter:image" content="${siteUrl}/meher/ambulance-hero.webp" />\n    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>\n  </head>`,
+          )
+          .replace('<div id="root"></div>', `<div id="root">${renderedApp}</div>`)
           .replace(
             "</head>",
             `    <link rel="canonical" href="${canonical}" />\n    ${alternates}\n  </head>`,
@@ -144,6 +198,7 @@ function multilingualSeoPages(): Plugin {
         const pageDir = path.join(outputDir, page.path);
         fs.mkdirSync(pageDir, { recursive: true });
         fs.writeFileSync(path.join(pageDir, "index.html"), html);
+        if (page.path === "fr") frenchIndex = html;
         const imageEntries = sitemapImages
           .map((image) => `    <image:image><image:loc>${xmlEscape(`${siteUrl}/meher/${image}`)}</image:loc></image:image>`)
           .join("\n");
@@ -151,6 +206,8 @@ function multilingualSeoPages(): Plugin {
           `  <url>\n    <loc>${xmlEscape(canonical)}</loc>\n    <xhtml:link rel="alternate" hreflang="fr-TN" href="${xmlEscape(`${siteUrl}/fr/`)}"/>\n    <xhtml:link rel="alternate" hreflang="ar-TN" href="${xmlEscape(`${siteUrl}/ar/`)}"/>\n    <xhtml:link rel="alternate" hreflang="en-TN" href="${xmlEscape(`${siteUrl}/en/`)}"/>\n    <xhtml:link rel="alternate" hreflang="x-default" href="${xmlEscape(`${siteUrl}/fr/`)}"/>\n${imageEntries}\n  </url>`,
         );
       }
+      // The root URL serves the French page and points search engines at its canonical URL.
+      if (frenchIndex) fs.writeFileSync(indexFile, frenchIndex);
       fs.writeFileSync(
         path.join(outputDir, "robots.txt"),
         `User-agent: *\nAllow: /\n${siteUrl ? `Sitemap: ${siteUrl}/sitemap.xml\n` : ""}`,
@@ -161,6 +218,7 @@ function multilingualSeoPages(): Plugin {
           `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>`,
         );
       }
+      await ssrServer.close();
     },
   };
 }

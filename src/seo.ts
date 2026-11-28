@@ -3,34 +3,34 @@ import { DEFAULT_PHONE_NUMBERS } from "./business";
 export type Locale = "fr" | "ar" | "en";
 
 export const BUSINESS = {
-  name: "Meher Ambulance Service",
+  name: "Meher Ambulance",
   email: "contact@meherambulance.tn",
   phoneNumbers: [
     import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBERS[0],
     DEFAULT_PHONE_NUMBERS[1],
   ],
   phone: import.meta.env.VITE_PHONE_NUMBER || DEFAULT_PHONE_NUMBERS[0],
-  siteUrl: import.meta.env.VITE_SITE_URL?.replace(/\/$/, "") ?? "https://ambulancemeher.tn",
+  siteUrl: import.meta.env.VITE_SITE_URL?.replace(/\/$/, "") ?? "https://www.ambulancemeher.tn",
 };
 
 export const localeMeta: Record<Locale, { lang: string; title: string; description: string }> = {
   fr: {
     lang: "fr-TN",
-    title: "Meher Ambulance Tunis | Ambulance et transport sanitaire",
+    title: "Meher Ambulance | Ambulance privée à Tunis – Transport sanitaire",
     description:
-      "Ambulance à Tunis, transport sanitaire, VSL et transport avec couveuse. Appelez Meher Ambulance pour vérifier disponibilité et délai estimé.",
+      "Meher Ambulance propose le transport sanitaire à Tunis, au Bardo et à El Menzah. Appelez pour décrire le trajet et confirmer la disponibilité.",
   },
   ar: {
     lang: "ar-TN",
-    title: "مهر للإسعاف في تونس | نقل صحي وسيارة إسعاف",
+    title: "مهر للإسعاف | سيارة إسعاف خاصة في تونس والنقل الصحي",
     description:
-      "خدمات الإسعاف والنقل الصحي وVSL ونقل الحاضنات في تونس. اتصلوا للتحقق من التوفر والمدة التقديرية.",
+      "توفر مهر للإسعاف خدمات النقل الصحي في تونس والباردو والمنزه. اتصلوا لشرح الرحلة والتحقق من التوفر.",
   },
   en: {
     lang: "en-TN",
-    title: "Meher Ambulance Tunis | Ambulance and Patient Transport",
+    title: "Meher Ambulance | Private Ambulance and Patient Transport in Tunis",
     description:
-      "Ambulance, patient transport, VSL and incubator transport in Tunis. Call Meher Ambulance to confirm availability and estimated wait.",
+      "Meher Ambulance provides patient transport in Tunis, Le Bardo and El Menzah. Call to discuss the journey and confirm availability.",
   },
 };
 
